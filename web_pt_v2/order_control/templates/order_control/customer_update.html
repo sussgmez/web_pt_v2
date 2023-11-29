@@ -1,0 +1,161 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Cliente{% endblock title %}
+
+{% block content %}
+    {% with order=customer.orders|last_order %}
+        {% if order.technician != user.technician and not user.is_superuser %}
+            <script>
+                window.location.href = "/"
+            </script>
+        {% endif %}
+    {% endwith %}
+    <main>
+        <div class="header-main">
+            <h1>Cliente</h1>
+        </div>
+        <div class="page-aside-section">
+            <aside class="aside">
+                <div class="customer-aside">
+                    <a href="{% url 'customer-list' %}" class="btn">Lista de clientes</a>
+                    {% if user.is_superuser %}
+                        <button onclick="submit_button(`{% url 'customer-delete' customer.contract_number %}`, '¿Está seguro que desea eliminar este cliente?')" class="btn btn-danger">Eliminar cliente</button>
+                    {% endif %}
+                    <div class="aside-order-history">
+                        <p class="label-history">Órdenes</p>
+                        {% if customer.orders.all %}
+                            {% if user.is_superuser %}
+                                <div class="orders">
+                                    {% for order in customer.orders.all|order_by_date_created %}
+                                    <a href="{% url 'order-update' order.pk %}" class="order-in-history">
+                                        <p class="order-pk">OR-{{ order.pk }} | {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
+                                        <p class="order-extra">
+                                            {% if order.extra_order_comment %}
+                                                {{ order.extra_order_comment }}
+                                            {% elif order.technician %}
+                                                {{ order.technician }}{% if order.date_assigned %} - {{ order.date_assigned|date:"d/m/Y" }}{% endif %}
+                                            {% else %}
+                                                --- ---
+                                            {% endif %}
+                                        </p>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                                {% with order=customer.orders|last_order %}
+                                    <a {% if order.closed %}href="{% url 'order-create' customer.pk %}" class="btn btn-info"{% else %}class="btn btn-info btn-info-disabled"{% endif %} >Crear orden</a>
+                                {% endwith %}
+                            {% else %}
+                                {% with order=customer.orders|last_order %}
+                                    <div class="orders">
+                                        <a href="{% url 'order-update' order.pk %}" class="order-in-history">
+                                            <p class="order-pk">OR-{{ order.pk }} | {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
+                                            <p class="order-extra">{% if order.technician %}{{ order.technician }}{% if order.date_assigned %} | {{ order.date_assigned|date:"d/m/Y" }}{% endif %}{% elif order.extra_order_comment %}{{ order.extra_order_comment }}{% else %}--- ---{% endif %}</p>
+                                        </a>
+                                    </div>
+                                {% endwith %}
+                            {% endif %}    
+                        {% else %}
+                            <a href="{% url 'order-create' customer.pk %}" class="btn btn-info">Crear orden</a>
+                        {% endif %}
+                    </div>  
+                </div>
+            </aside>
+            <section class="section">
+                <div class="customer-detail">
+                    <p class="contract-number">C{{ customer.contract_number }}</p>
+                    <form method="post" class="customer-form" id="id_form_customer_update">
+                        {% csrf_token %}
+                        {{ form.contract_number }}
+                        <div class="columns-2">
+                            <label for="id_customer_name">{{ form.customer_name.label }}</label>
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                                {% for error in form.customer_name.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_plan">{{ form.plan.label }}</label>
+                            {{ form.plan }}
+                        </div>
+                        <div>
+                            <label for="id_customer_type">{{ form.customer_type.label }}</label>
+                            {{ form.customer_type }}
+                        </div>  
+                        <div class="columns-2">
+                            <label for="id_address">{{ form.address.label }}</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                {% for error in form.address.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_phone_1">{{ form.phone_1.label }}</label>
+                            {{ form.phone_1 }}
+                            {% if form.phone_1.errors %}
+                                {% for error in form.phone_1.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_phone_2">{{ form.phone_2.label }}</label>
+                            {{ form.phone_2 }}
+                        </div>
+                        <div>
+                            <label for="id_email">{{ form.email.label }}</label>
+                            {{ form.email }}
+                        </div>
+                        <div>
+                            <label for="id_category">{{ form.category.label }}</label>
+                            {{ form.category }}
+                        </div>
+                        <div>
+                            <label for="id_assigned_to">{{ form.assigned_to.label }}</label>
+                            {{ form.assigned_to }}
+                        </div>
+                        <div>
+                            <label for="id_seller">{{ form.seller.label }}</label>
+                            {{ form.seller }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_comment">{{ form.comment.label }}</label>
+                            {{ form.comment }}
+                        </div>
+                    </form>
+                    {% if user.is_superuser %}
+                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_customer_update', '¿Está seguro que desea realizar estos cambios?')">Editar</button>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </main>
+    {% if messages %}
+        <div id="id_alert_messages">
+            {% for message in messages %}
+                <div class="message">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById('id_alert_messages').style.display = 'none';
+                console.log("try");              
+            }, "3000")
+        </script>
+    {% endif %}
+    {% if not user.is_superuser %}
+        <script>
+            window.onload = () => {
+                deactive_form('id_form_customer_update')
+            }
+        </script>
+    {% endif %}
+    
+{% endblock content %}

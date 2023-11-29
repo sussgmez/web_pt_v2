@@ -1,0 +1,77 @@
+{% load order_control_extras %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT | {% block title %}{% endblock title %}</title>
+
+    <!-- Normalize -->
+    <link rel="stylesheet" href="{% static "normalize.css" %}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- My Styles -->
+    <link rel="stylesheet" href="{% static "style.css" %}"> 
+</head>
+<body>
+    <!-- Header -->
+    <header id="id_page_header">
+        <!-- Logo -->
+        <a href='{% url "customer-list" %}' id="id_page_logo">
+            <img src="{% static 'logo.png' %}" alt="pt">
+        </a>
+        {% if user.is_authenticated %}
+            <!-- Navbar -->
+            <div id="id_header_navbar">
+                <select id="id_select_navbar" onchange="select_page()">
+                    <option value="{% url 'customer-list' %}">Clientes</option>
+                    <option value="{% url 'technician-list' %}" {% if request.path == "/technicians/" %}selected{% endif %}>Técnicos</option>
+                </select>
+                <hr class="v-line">
+                <a class="link-logout" href="{% url 'logout' %}">Cerrar Sesión</a>
+            </div>
+            {% endif %}
+        </header>
+        
+        <!-- Content -->
+    {% block content %}
+    {% endblock content %}
+
+    <!-- General functions -->
+    <script>
+        function submit_form(id_form, message_alert) {
+            yes_or_no = confirm(message_alert)
+            if (yes_or_no) {
+                document.getElementById(id_form).submit()
+            }
+        }
+        function submit_button(to_url, message_alert) {
+            yes_or_no = confirm(message_alert)
+            if (yes_or_no) {
+                window.location.href = to_url
+            }
+        }
+        function select_page() {
+            url = document.getElementById('id_select_navbar').value
+            window.location.href = url
+        }
+        function deactive_form(id_form) {
+            form = document.getElementById(id_form)
+            inputs = [...form.getElementsByTagName('input'), ...form.getElementsByTagName('textarea'), ...form.getElementsByTagName('select')]
+            inputs.forEach(element => {
+                element.disabled = true
+            });
+        }
+        function get_message() {
+                message = `*Validar potencia | {{ order.customer.get_category_display }}*\n*Nro. De Contrato:* C{{order.customer.contract_number}}\n*Nombre:* {{order.customer.customer_name}}\n*Dirección:* {{order.customer.address|short_address}}\n*Plan:* {{order.customer.get_plan_display}}\n*Z${document.querySelector('#id_zone').value}.OLT${document.querySelector('#id_olt').value}.T${document.querySelector('#id_card').value}.PON${document.querySelector('#id_pon').value}.C${document.querySelector('#id_box').value}.PUERTO${document.querySelector('#id_port').value}*\n*PC:* ${document.querySelector('#id_box_power').value}dBm\n*PR:* ${document.querySelector('#id_house_power').value}dBm\n*Serial ONU:* ${document.querySelector('#id_onu_serial').value}\n*DROP:* ${document.querySelector('#id_drop_serial').value}/${document.querySelector('#id_drop_used').value}m\n*Tensores:* ${document.querySelector('#id_hook_used').value}\n*Conectores:* ${document.querySelector('#id_fast_conn_used').value}`
+                document.querySelector('#id_installation_message').value = message
+            }
+    </script>
+
+</body>
+</html>

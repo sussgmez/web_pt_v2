@@ -1,0 +1,98 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Cliente{% endblock title %}
+
+{% block content %}
+    <main>
+        <div class="header-main">
+            <h1>Cliente</h1>
+        </div>
+        <div class="page-aside-section">
+            <aside class="aside">
+                <div class="customer-aside">
+                    <a href="{% url 'customer-list' %}" class="btn btn-submit">Lista de clientes</a>
+                </div>  
+            </aside>
+            <section class="section">
+                <div class="customer-detail">
+                    <p class="contract-number">Añadir cliente</p>
+
+                    <form method="post" class="customer-form" id="id_form_customer_update">
+                        {% csrf_token %}
+                        <div>
+                            <label for="id_contract_number">{{ form.contract_number.label }}*</label>
+                            {{ form.contract_number }}
+                            {% if form.contract_number.errors %}
+                                {% for error in form.contract_number.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_customer_name">{{ form.customer_name.label }}*</label>
+                            {{ form.customer_name }}
+                            {% if form.contract_number.errors %}
+                                {% for error in form.customer_name.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_plan">{{ form.plan.label }}</label>
+                            {{ form.plan }}
+                        </div>
+                        <div>
+                            <label for="id_customer_type">{{ form.customer_type.label }}</label>
+                            {{ form.customer_type }}
+                        </div>  
+                        <div class="columns-2">
+                            <label for="id_address">{{ form.address.label }}*</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                {% for error in form.address.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_phone_1">{{ form.phone_1.label }}*</label>
+                            {{ form.phone_1 }}
+                            {% if form.phone_1.errors %}
+                                {% for error in form.phone_1.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_phone_2">{{ form.phone_2.label }}</label>
+                            {{ form.phone_2 }}
+                        </div>
+                        <div>
+                            <label for="id_email">{{ form.email.label }}</label>
+                            {{ form.email }}
+                        </div>
+                        <div>
+                            <label for="id_category">{{ form.category.label }}</label>
+                            {{ form.category }}
+                        </div>
+                        <div>
+                            <label for="id_assigned_to">{{ form.assigned_to.label }}</label>
+                            {{ form.assigned_to }}
+                        </div>
+                        <div>
+                            <label for="id_seller">{{ form.seller.label }}</label>
+                            {{ form.seller }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_comment">{{ form.comment.label }}</label>
+                            {{ form.comment }}
+                        </div>
+                    </form>
+                    <button type="submit" class="btn btn-submit" onclick="document.querySelector('#id_form_customer_update').submit()">Añadir</button>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock content %}

@@ -1,0 +1,224 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Cliente{% endblock title %}
+
+{% block content %}
+    {% if order.technician != user.technician and not user.is_superuser %}
+        <script>
+            window.location.href = "/"
+        </script>
+    {% endif %}  
+    <main>
+        <div class="header-main">
+            <h1>OR-{{order.pk}}: C{{ order.customer.contract_number }}</h1>
+        </div>
+        <div class="page-aside-section">
+            <aside class="aside">
+                <div class="order-aside">
+                    <a href="{% url 'customer-update' order.customer.contract_number %}" class="btn">Ver cliente</a>
+                    <hr>
+                    {% if not order.completed and not order.closed %}
+                        <form action="" method="post" id="id_form_complete_order">
+                            {% csrf_token %}
+                            <input type="hidden" name="completed" id="id_completed" value="true">
+                            <input type="hidden" name="technician" id="id_technician" value="{{form.technician.value}}">
+                            <input type="hidden" name="date_assigned" id="id_date_assigned" value="{{ form.date_assigned.value|date:'Y-m-d\T00:01' }}">
+                        </form>
+                        <button type="submit" class="btn btn-success" onclick="submit_form('id_form_complete_order', '¿Marcar como finalizada?')">Marcar como finalizada</button>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                        <button href="" onclick="submit_button(`{% url 'order-delete' order.pk %}`, '¿Está seguro que desea eliminar esta orden?')" class="btn btn-danger">Eliminar orden</button>
+                    {% endif %}
+                </div>
+            </aside>
+            <section class="section">
+                <div class="order-detail">
+                    <p class="order-pk">OR-{{order.pk}}: C{{ order.customer.contract_number }}</p>
+                    {% if order.completed %}<p class="order-label order-completed-label">Instalación finalizada</p>
+                    {% elif order.closed %}<p class="order-label order-closed-label">Orden cancelada</p>
+                    {% elif order.technician %}<p class="order-label order-assigned-label">Pendiente por realizar</p>
+                    {% else %}<p class="order-label order-to-assign-label">Orden por asignar</p>{% endif %}</p>
+
+                    <form class="order-customer-form" id="id_form_customer">
+                        <div>
+                            <label for="id_customer_name">{{ customer_form.customer_name.label }}</label>
+                            {{ customer_form.customer_name }}
+                        </div>
+                        <div>
+                            <label for="id_category">{{ customer_form.category.label }}</label>
+                            {{ customer_form.category }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_address">{{ customer_form.address.label }}</label>
+                            {{ customer_form.address }}
+                        </div>
+                    </form>
+                    <hr>
+                    <p class="header-form">Asignación</p>
+                    <form class="order-form" id="id_form_order_update" method="post">
+                        {% csrf_token %}
+                        <div>
+                            <label for="id_technician">{{ form.technician.label }}</label>
+                            {{ form.technician }}
+                        </div>
+                        <div>
+                            <label for="id_date_assigned">{{ form.date_assigned.label }}</label>
+                            {{ form.date_assigned }}
+                        </div>
+                    </form>
+                    {% if not order.closed and not order.completed and user.is_superuser %}
+                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_order_update', '¿Modificar asignación?')">Modificar asignación</button>
+                    {% endif %}
+                </div>
+                <div class="order-detail">
+                    <p class="header-form">Información instalación</p>
+                    <form class="order-installation-form" method="post" action="{% url 'installation-update' order.installation.pk %}" id="id_form_installation_update">
+                        {% csrf_token %}
+                        <div class="inputs-box columns-2">
+                            <div>
+                                <label for="id_zone">{{ installation_form.zone.label }}</label>
+                                {{ installation_form.zone }}
+                            </div>
+                            <div>
+                                <label for="id_olt">{{ installation_form.olt.label }}</label>
+                                {{ installation_form.olt }}
+                            </div>
+                            <div>
+                                <label for="id_card">Tarj.</label>
+                                {{ installation_form.card }}
+                            </div>
+                            <div>
+                                <label for="id_pon">{{ installation_form.pon.label }}</label>
+                                {{ installation_form.pon }}
+                            </div>
+                            <div>
+                                <label for="id_box">{{ installation_form.box.label }}</label>
+                                {{ installation_form.box }}
+                            </div>
+                            <div>
+                                <label for="id_port">Prto.</label>
+                                {{ installation_form.port }}
+                            </div>
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_box_power">{{ installation_form.box_power.label }}</label>
+                            {{ installation_form.box_power }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_house_power">{{ installation_form.house_power.label }}</label>
+                            {{ installation_form.house_power }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_onu_serial">{{ installation_form.onu_serial.label }}</label>
+                            {{ installation_form.onu_serial }}
+                        </div>
+                        <div class="columns-2">
+                            <label for="id_router_serial">{{ installation_form.router_serial.label }}</label>
+                            {{ installation_form.router_serial }}
+                        </div>
+                        <div>
+                            <label for="id_drop_serial">{{ installation_form.drop_serial.label }}</label>
+                            {{ installation_form.drop_serial }}
+                        </div>
+                        <div>
+                            <label for="id_drop_used">{{ installation_form.drop_used.label }}</label>
+                            {{ installation_form.drop_used }}
+                        </div>
+                        <div>
+                            <label for="id_hook_used">{{ installation_form.hook_used.label }}</label>
+                            {{ installation_form.hook_used }}
+                        </div>
+                        <div> 
+                            <label for="id_fast_conn_used">{{ installation_form.fast_conn_used.label }}</label>
+                            {{ installation_form.fast_conn_used }}
+                        </div>
+                    </form> 
+                    {% if not order.closed %}
+                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_installation_update', '¿Guardar cambios de instalación?')">Modificar instalación</button>
+                    {% endif %}
+                    <textarea id="id_installation_message" readonly></textarea>
+                </div>
+                {% if not order.completed and user.is_superuser %}
+                <div class="order-detail">
+                    <p class="header-form">Cancelar orden</p>
+                    <form class="order-form" id="form_close_order" method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="closed" id="id_closed" value="true">
+                        <div class="columns-2">
+                            <label for="id_extra_order_comment">Motivo</label>
+                            {{ form.extra_order_comment }}
+                        </div>
+                        {% if form.technician.value %}
+                            <input type="hidden" name="technician" id="id_technician" value="{{ form.technician.value }}">
+                        {% endif %}
+                        <input type="hidden" name="date_assigned" id="id_date_assigned" value="{{ form.date_assigned.value|date:'Y-m-d\T00:01' }}">
+                    </form>
+                    <button type="submit" class="btn btn-danger" onclick="submit_form('form_close_order', '¿Desea cancelar la orden?')">Cancelar orden</button>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+    {% if messages %}
+        <div id="id_alert_messages">
+            {% for message in messages %}
+                <div class="message">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById('id_alert_messages').style.display = 'none';            
+            }, "3000")
+        </script>
+    {% endif %}
+    <script>
+        window.onload = () => {
+            deactive_form('id_form_customer')
+            get_message()
+        }
+    </script>
+    
+    {% if order.closed %}
+        <script>
+            window.onload = () => {
+                deactive_form('id_form_customer')
+                deactive_form('id_form_order_update')
+                deactive_form('id_form_installation_update')
+                get_message()
+            }
+        </script>
+    {% elif order.completed or not user.is_superuser %}
+        <script>
+            window.onload = () => {
+                deactive_form('id_form_customer')
+                deactive_form('id_form_order_update')
+                get_message()
+            }
+        </script>
+    {% endif %}
+
+    
+
+    <!-- {% if order.closed %}
+        <script>
+            window.onload = () => {
+                console.log("a");
+                deactive_form('id_form_order_update')
+                deactive_form('id_form_installation_update')
+            }
+        </script>
+    {% endif %}
+
+    {% if order.completed or not user.is_superuser %}
+        <script>
+            window.onload = () => {
+                deactive_form('id_form_order_update')
+            }
+        </script>
+    {% endif %} -->
+        
+{% endblock content %}

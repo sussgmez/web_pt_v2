@@ -1,0 +1,902 @@
+/* Variables */ 
+/* Verified */
+$primary-color: #001736;
+$secondary-color: #528FF8;
+$tertiary-color: #F5F9FF;
+
+$light-border: #dadada;
+$dark-border: #b6b6b6;
+
+$white: #FFF;
+$black: #000;
+
+$danger-color: #e24b4b;
+$warning-color: #f3ad2b;
+$success-color: #169668;;
+$info-color: #3e8eff;
+
+
+$lg_screen: 1144px;
+$md_screen: 868px;
+$sm_screen: 588px;
+
+/* Standard */
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    color: $primary-color;
+}
+
+a {color: $primary-color;text-decoration: none;}
+select {appearance: none;}
+h1,h2,h3,h4,p{margin: 0;}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}
+input[type=number] {appearance: textfield;}
+
+/* buttons */
+.btn {
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 0.75rem 0.5rem;
+    background-color: $primary-color;
+    border-radius: 0.25rem;
+    color: $white;
+    font-weight: 600;
+    font-size: 0.8rem;
+    border: none;
+    transition: background-color 0.1s;
+    &:hover {
+        background-color: rgba($primary-color, $alpha: 0.9);
+    }
+}
+
+.btn-danger {
+    background-color: $danger-color;
+    &:hover {
+        background-color: rgba($danger-color, $alpha: 0.9);
+    }
+}
+
+.btn-info {
+    background-color: $info-color;
+    &:hover {
+        background-color: rgba($info-color, $alpha: 0.9);
+    }
+}
+
+.btn-success {
+    background-color: $success-color;
+    &:hover {
+        background-color: rgba($success-color, $alpha: 0.9);
+    }
+}
+
+.btn-info-disabled {
+    cursor: default;
+    background-color: rgba($info-color, $alpha: 0.7) !important;
+}
+
+
+.nowrap {
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+/* Header */
+#id_page_header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background-color: $primary-color;
+    border-bottom: 1px solid $white;
+    z-index: 10;
+    #id_page_logo {display: contents;}
+    #id_header_navbar {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        #id_select_navbar {
+            cursor: pointer;
+            padding: 0.5rem;
+            width: 128px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: transparent;
+            color: $tertiary-color;
+            border-radius: 0.25rem;
+            border: 1px solid $tertiary-color;
+            box-shadow: -2px 2px $tertiary-color;
+            option {
+                background-color: $tertiary-color;
+                color: $primary-color;
+                font-size: 0.85rem;
+            }
+        }
+        .v-line {
+            height: 1.5rem;
+            margin: 0;
+            border: none;
+            border-right: 1px solid $tertiary-color;
+        }
+        .link-logout { 
+            color: $tertiary-color;
+            font-size: 0.75rem;
+            font-weight: 600;
+            &:hover {
+                color: $secondary-color;
+            }
+        }
+    }
+    @media (max-width: $sm_screen) {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+}
+
+/* Login page */
+.div-login {
+    position: absolute;
+    top: 0;left: 0;right: 0;bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $tertiary-color;
+    .login-content {
+        border: 1px solid $light-border;
+        border-radius: 0.25rem;
+        padding: 2rem;
+        box-shadow: 0 4px 2px rgba($black, $alpha: 0.2);
+        background-color: $white;
+        width: 100%;
+        min-width: 240px;
+        max-width: 360px;
+        margin: 0.5rem;
+        .header-login {
+            margin-bottom: 1rem;
+        }
+    }
+    #id_form_login {
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .div-input-icon {
+            display: flex;
+            align-items: center;
+            border: 1px solid $light-border;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            svg {margin: 0 0.5rem;}
+            input {
+                width: 100%;
+                border: none;
+                font-size: 0.8rem;
+                font-weight: 500;
+                padding: 0.75rem 1rem;
+            }
+        }
+        .text-error {
+            background-color: rgba($warning-color, $alpha: 0.05);
+            color: $warning-color;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+    }
+}
+
+/* General styles */
+main {
+    .header-main {
+        padding: 1rem 1.75rem;
+        border-bottom: 1px solid $light-border;
+        h1 {
+            color: $primary-color;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+    }
+}
+
+.page-aside-section {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    .aside {
+        padding: 0.75rem;
+        border-right: 1px solid $light-border;
+        hr {
+            border: none;
+            border-bottom: 1px solid $dark-border;
+            margin: 0.75rem -0.75rem;
+        }
+        .btn {
+            font-size: 0.75rem;
+            padding: 0.5rem;
+            &:last-of-type {margin-bottom: 0;}
+            margin: 0.5rem auto;
+        }
+        
+        @media (max-width: $md_screen) {
+            padding: 0.75rem 0.5rem;
+            border: none;
+            border-bottom: 1px solid $light-border;
+        }
+    }
+    .filters-aside {
+        padding: 1rem 0.75rem;
+        border: 1px solid $primary-color;
+        border-radius: 0.25rem;
+        margin: auto;
+        .filters-header {
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+        .label-search {
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .label-search-2 {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin: 0;
+            grid-column: span 2;
+        }
+        .input-search {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid $light-border;
+            margin-bottom: 0.75rem;
+            border-radius: 0.25rem;
+            height: fit-content;
+            option {
+                font-weight: 600;
+            }
+        }
+        #input-min-date {
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: $md_screen) {
+            max-width: 540px;
+        }
+        @media (max-width: $sm_screen) {
+            max-width: 264px;
+        }
+    }
+    .customer-aside, .order-aside{
+        margin: auto;
+        .btn {
+            padding: 0.65rem;
+        }
+        hr {margin: 1rem 0;}
+        @media (max-width: $md_screen) {
+            max-width: 504px;
+        }
+        @media (max-width: $sm_screen) {
+            max-width: 264px;
+        }
+    }
+    #id_form_filters {
+        @media (max-width:$md_screen) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            align-items: end;
+            .input-search {
+                margin: 0;
+            }
+        }
+        @media (max-width:$sm_screen) {
+            display: block;
+            .input-search {
+                margin-bottom: 0.75rem;
+            }
+            #input-min-date {
+                margin-bottom: 0;
+            }
+        }
+    }
+    .aside-order-history {
+        color: $primary-color;
+        margin: 1rem 0 0 0;
+        p{margin: 0;font-size: 0.8rem;}
+        .label-history {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+        .orders {
+            border: 1px solid $primary-color;
+            padding: 0;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
+        }
+        .order-in-history {
+            padding: 0.5rem;
+            display: block;
+            text-decoration: none;
+            color: $primary-color;
+            border-bottom: 1px solid $primary-color;
+            .order-pk {
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .order-extra {
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .order-status-label {
+                font-weight: 700;
+                font-size: 0.7rem;
+            }
+            .order-assigned {
+                color: $warning-color;
+            }
+            .order-completed {
+                color: $success-color;
+            }
+            .order-to-assign {
+                color: $info-color;
+            }
+            .order-closed {
+                color: $danger-color;
+            }
+            &:last-child {
+                border: none;
+            }
+            &:hover {
+                background-color: $tertiary-color;
+            }
+        }
+        
+    }
+    .section {
+        padding: 0.75rem;
+        .section-divider {
+            border: none;
+            border-bottom: 1px solid $light-border;
+            margin: 1rem 0;
+        }
+        @media (max-width: $md_screen) {
+            padding: 0.75rem 0.5rem;
+        }
+    }
+    .customer-list {
+        display: grid;
+        grid-template-columns: repeat(3, 264px);
+        gap: 1rem;
+        min-height: 640px;
+        .customer-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 0.25rem;
+            border: 1px solid $primary-color;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: $primary-color;
+            font-size: 0.8rem;
+            border-radius: 0.25rem;
+            box-shadow: -4px 4px rgba($black, $alpha: 0.1);
+            height: fit-content;
+            p {margin: 0;}
+            div {overflow: hidden;}
+            hr {
+                border: none;
+                border-bottom: 1px solid $dark-border;
+                margin: 0.5rem -0.75rem;
+            }
+            
+            .columns-2 {
+                grid-column: span 2;
+            }
+            .label {
+                font-weight: 600;
+            }
+            .customer-pk {
+                font-weight: 700;
+                font-size: 1rem;
+            }
+            .customer-address {
+                height: 30px;
+                overflow: hidden;
+            }
+            .p-status {
+                text-align: center;
+                font-weight: 600;
+                padding: 0.5rem;
+                border-radius: 0.25rem;
+            }
+            .p-completed {
+                color: $success-color;
+                background-color: rgba($success-color, $alpha: 0.1);
+            }
+            .p-assigned {
+                color: $warning-color;
+                background-color: rgba($warning-color, $alpha: 0.1);
+            }
+            .p-closed {
+                color: $danger-color;
+                background-color: rgba($danger-color, $alpha: 0.1);
+            }
+            .p-to-assign {
+                color: $info-color;
+                background-color: rgba($info-color, $alpha: 0.1);
+            }
+        }
+        .customers-not-found {
+            width: 100%;
+            height: fit-content;
+            padding: 2rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 0.25rem;
+            text-align: center;
+            background-color: rgba($black, $alpha: 0.07);
+            color: rgba($black, $alpha: 0.7);
+        }
+        @media (max-width:$lg_screen) {
+            grid-template-columns: repeat(2, 264px);
+        }
+        @media (max-width:$md_screen) {
+            justify-content: center;
+        }
+        @media (max-width:$sm_screen) {
+            grid-template-columns: 264px
+        }
+    }
+    .buttons-prev-next  {
+        .btn-prev, .btn-next {
+            cursor: default;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            width: 120px;
+            &:hover {
+                background-color: $primary-color;
+            }
+        }
+        .btn-active {
+            cursor: pointer;
+            &:hover {
+                background-color: rgba($primary-color, $alpha: 0.8);
+            }
+        }
+        @media (max-width: $md_screen) {
+            margin: auto;
+            width: fit-content;
+        }
+    }
+    .customer-detail {
+        padding: 1rem;
+        border: 1px solid $primary-color;
+        box-shadow: -4px 4px rgba($black, $alpha: 0.1);
+        border-radius: 0.25rem;
+        width: fit-content;
+        
+        p {margin: 0;}
+        .contract-number {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .btn-submit {
+            width: fit-content;
+            padding: 0.5rem 4rem;
+        }
+        .text-input-error {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: $danger-color;
+        }
+        @media (max-width: $md_screen) {
+            margin: auto;
+        }
+        @media (max-width: $sm_screen) {
+            max-width: 264px;
+        }
+    }
+    .customer-form {
+        display: grid;
+        grid-template-columns: repeat(2, 232px);
+        gap: 16px 8px;
+        margin: 1rem 0;
+        label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: block;
+        }
+        input, textarea, select {
+            width: 100%;
+            appearance: none;
+            border: 1px solid $light-border;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            resize: none;
+            font-weight: 500;
+            border-radius: 0.25rem;
+            &::-webkit-scrollbar {
+                width: 2px;
+            }
+            &:hover {
+                &::-webkit-scrollbar-thumb {
+                    background-color: $dark-border;
+                }
+            }
+            
+        }
+        .columns-2 {
+            grid-column: span 2;
+        }
+        @media (max-width: $sm_screen) {
+            grid-template-columns: 232px;
+            .columns-2 {
+                grid-column: span 1;
+            }
+        }
+    }
+    .order-detail {
+        border: 1px solid $primary-color;
+        box-shadow: -4px 4px rgba($black, $alpha: 0.1);
+        border-radius: 0.25rem;
+        padding: 1.25rem 1rem;
+        width: fit-content;
+        margin-bottom: 1rem;
+        hr {
+            margin: 1.25rem -1rem;
+            border: none;
+            border-bottom: 1px solid rgba($primary-color, $alpha: 0.2);
+        }
+        .order-pk {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .order-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0.75rem 0;
+        }
+        .order-closed-label {
+            color: $danger-color;
+        }
+        .order-completed-label {
+            color: $success-color;
+        }
+        .order-assigned-label {
+            color: $warning-color;
+        }
+        .order-to-assign-label {
+            color: $info-color;
+        }
+        
+        .header-form {
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+        .btn {
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            width: fit-content;
+            padding: 0.5rem 2rem;
+        }
+        .btn-submit {
+            &:hover {
+                background-color: rgba($primary-color, $alpha: 0.9);
+            }
+        }
+        .btn-danger {
+            &:hover {
+                background-color: rgba($danger-color, $alpha: 0.9);
+            }
+        }
+        #id_installation_message {
+            display: block;
+            width: 100%;
+            resize: none;
+            border-radius: 0.25rem;
+            border: 1px solid $light-border;
+            height: 140px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            &::-webkit-scrollbar {
+                width: 2px;
+            }
+            &:hover {
+                &::-webkit-scrollbar-thumb {
+                    width: 2px;
+                    background-color: $dark-border;
+                }
+            }
+            @media (max-width: $sm_screen) {
+                width: 232px;
+            }
+        }
+        @media (max-width: $md_screen) {
+            margin: 0 auto 1rem auto;
+        }
+    }
+    .order-customer-form, .order-form {
+        display: grid;
+        grid-template-columns: repeat(2, 232px);
+        gap: 12px 8px;
+        .columns-2 {
+            grid-column: span 2;
+        }
+        label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: block;
+        }
+        input, textarea, select {
+            width: 100%;
+            appearance: none;
+            border: 1px solid $light-border;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            resize: none;
+            font-weight: 500;
+            border-radius: 0.25rem;
+            &::-webkit-scrollbar {
+                width: 2px;
+            }
+            &:hover {
+                &::-webkit-scrollbar-thumb {
+                    background-color: $dark-border;
+                }
+            }
+        }
+        input[type=datetime-local] {
+            height: 32.7px;
+        }
+        @media (max-width: $sm_screen) {
+            grid-template-columns: 232px;
+            .columns-2 {
+                grid-column: span 1;
+            }
+        }
+    }
+    .order-installation-form {
+        display: grid;
+        grid-template-columns: repeat(4, 112px);
+        gap: 12px 8px;
+        .columns-2 {
+            grid-column: span 2;
+        }
+        label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: block;
+        }
+        input, textarea, select {
+            width: 100%;
+            appearance: none;
+            border: 1px solid $light-border;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            resize: none;
+            font-weight: 500;
+            
+            border-radius: 0.25rem;
+        }
+        .inputs-box {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-column: span 4;
+            gap: 0.25rem;
+            div {
+                overflow: hidden;
+            }
+            label {
+                font-size: 0.7rem;
+            }
+        }
+        @media (max-width: $sm_screen) {
+            grid-template-columns: 232px;
+            .columns-2 {
+                grid-column: span 1;
+            }
+        }
+    }
+    
+    @media (max-width:$md_screen) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.page-section {
+    .section {
+        padding: 3rem 0;
+        .section-divider {
+            border: none;
+            border-bottom: 1px solid $light-border;
+            margin: 1rem 0;
+        }
+    }
+    .technician-list {
+        width: fit-content;
+        margin: auto;
+        .technician-name {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            @media (max-width: $sm_screen) {
+                text-align: center;
+            }
+        }
+        .technician-content {
+            display: grid;
+            grid-template-columns: 3fr 264px;
+            max-width: 1140px;
+            gap: 0.75rem;
+            margin-bottom: 4rem;
+            position: relative;
+            @media (max-width: $lg_screen) {
+                grid-template-columns: 2fr 264px;
+            }
+            @media (max-width: $md_screen) {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 400px;
+            }
+        }
+        .orders-message {
+            border: 1px solid $dark-border;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            overflow: hidden;
+            overflow-y: overlay;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            grid-column: 2 / 3;
+            hr {
+                border: none;
+                border-bottom: 1px solid $dark-border;
+                &:last-of-type {display: none;}
+            }
+            .message-without-orders {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: $dark-border;
+                background-color: rgba($black, $alpha: 0.05);
+                text-align: center;
+                padding: 0.45rem;
+                border-radius: 0.25rem;
+            }
+            &::-webkit-scrollbar {
+                width: 1px;
+            }
+            &::-webkit-scrollbar-thumb {
+                width: 1px;
+                border-radius: 0.25rem;
+                background-color: $black;
+            }
+            @media (max-width: $md_screen) {
+                grid-column: auto;
+                grid-row: 2 / 3;
+            }
+        }
+        .order-message {
+            p {
+                font-size: 0.75rem;
+                font-weight: 500;
+                line-height: 1.15rem;
+            }
+            .order-message-contract-number {
+                font-weight: 700;
+            }
+            .order-message-address {
+                line-height: 0.75rem;
+                margin-top: 0.25rem;
+                display: inline-block;
+            }
+        }
+    }
+    .technician-orders {
+        display: grid;
+        grid-template-columns: repeat(3, 264px);
+        gap: 0.75rem;
+        height: fit-content;
+        .order {
+            border: 1px solid $primary-color;
+            border-radius: 0.25rem;
+            box-shadow: -4px 4px rgba($black, $alpha: 0.1);
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            hr {
+                margin: 0.5rem -0.75rem;
+                border: none;
+                border-bottom: 1px solid $light-border;
+                grid-column: span 2;
+            }
+            .order-header {
+                font-weight: 700;
+                font-size: 0.95rem;
+                grid-column: span 2;
+            }
+            .order-text {
+                max-height: 29.41px;
+                overflow: hidden;
+                margin-bottom: 0.25rem;
+            }
+            .order-address {
+                height: 29.41px;
+            }
+            .label {
+                font-weight: 700;
+                font-size: 0.75rem;
+            }
+            .columns-2 {
+                grid-column: span 2;
+            }
+        }
+        .p-technician-without-orders {
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 0.25rem;
+            text-align: center;
+            background-color: rgba($black, $alpha: 0.07);
+            color: rgba($black, $alpha: 0.5);
+            grid-column: span 3;
+            @media (max-width: $sm_screen) {
+                grid-column: 1;
+            }
+        }
+        @media (max-width: $lg_screen) {
+            grid-template-columns: repeat(2, 264px);
+        }
+        @media (max-width: $sm_screen) {
+            grid-template-columns: 264px;
+        }
+    }
+}
+
+#id_alert_messages {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    margin: 1rem auto;
+    max-width: 480px;
+    justify-content: center;
+    z-index: 20;
+    background-color: $white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+
+    .message {
+        background-color: rgba($success-color, $alpha: 0.05);
+        padding: 0.75rem;
+        box-shadow: 0px 2px 2px rgba($black, $alpha: 0.2);
+        border: 1px solid $success-color;
+        border-radius: 0.5rem;
+        p {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: $success-color;
+        }
+    }
+}
