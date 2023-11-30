@@ -280,7 +280,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .filters-aside {
-    max-width: 264px;
+    max-width: 344px;
   }
 }
 .page-aside-section .customer-aside, .page-aside-section .order-aside {
@@ -299,7 +299,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .customer-aside, .page-aside-section .order-aside {
-    max-width: 264px;
+    max-width: 344px;
   }
 }
 @media (max-width: 868px) {
@@ -418,6 +418,9 @@ main .header-main h1 {
   border-radius: 0.25rem;
   box-shadow: -4px 4px rgba(0, 0, 0, 0.1);
   height: fit-content;
+  max-width: 344px;
+  width: 100%;
+  margin: auto;
 }
 .page-aside-section .customer-list .customer-card p {
   margin: 0;
@@ -489,7 +492,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .customer-list {
-    grid-template-columns: 264px;
+    grid-template-columns: 1fr;
   }
 }
 .page-aside-section .buttons-prev-next .btn-prev, .page-aside-section .buttons-prev-next .btn-next {
@@ -544,7 +547,8 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .customer-detail {
-    max-width: 264px;
+    width: 100%;
+    max-width: 344px;
   }
 }
 .page-aside-section .customer-form {
@@ -579,7 +583,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .customer-form {
-    grid-template-columns: 232px;
+    grid-template-columns: 1fr;
   }
   .page-aside-section .customer-form .columns-2 {
     grid-column: span 1;
@@ -910,7 +914,8 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-section .technician-orders {
-    grid-template-columns: 264px;
+    grid-template-columns: 1fr;
+    max-width: 344px;
   }
 }
 

@@ -274,7 +274,7 @@ main {
             max-width: 540px;
         }
         @media (max-width: $sm_screen) {
-            max-width: 264px;
+            max-width: 344px;
         }
     }
     .customer-aside, .order-aside{
@@ -287,7 +287,7 @@ main {
             max-width: 504px;
         }
         @media (max-width: $sm_screen) {
-            max-width: 264px;
+            max-width: 344px;
         }
     }
     #id_form_filters {
@@ -399,6 +399,9 @@ main {
             border-radius: 0.25rem;
             box-shadow: -4px 4px rgba($black, $alpha: 0.1);
             height: fit-content;
+            max-width: 344px;
+            width: 100%;
+            margin: auto;
             p {margin: 0;}
             div {overflow: hidden;}
             hr {
@@ -462,7 +465,7 @@ main {
             justify-content: center;
         }
         @media (max-width:$sm_screen) {
-            grid-template-columns: 264px
+            grid-template-columns: 1fr
         }
     }
     .buttons-prev-next  {
@@ -512,7 +515,8 @@ main {
             margin: auto;
         }
         @media (max-width: $sm_screen) {
-            max-width: 264px;
+            width: 100%;
+            max-width: 344px;
         }
     }
     .customer-form {
@@ -548,7 +552,7 @@ main {
             grid-column: span 2;
         }
         @media (max-width: $sm_screen) {
-            grid-template-columns: 232px;
+            grid-template-columns: 1fr;
             .columns-2 {
                 grid-column: span 1;
             }
@@ -868,7 +872,8 @@ main {
             grid-template-columns: repeat(2, 264px);
         }
         @media (max-width: $sm_screen) {
-            grid-template-columns: 264px;
+            grid-template-columns: 1fr;
+            max-width: 344px;
         }
     }
 }
