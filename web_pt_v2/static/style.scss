@@ -633,11 +633,15 @@ main {
                 }
             }
             @media (max-width: $sm_screen) {
-                width: 232px;
+                width: 100%;
             }
         }
         @media (max-width: $md_screen) {
             margin: 0 auto 1rem auto;
+        }
+        @media (max-width: $sm_screen) {
+            width: 100%;
+            max-width: 344px;
         }
     }
     .order-customer-form, .order-form {
@@ -674,7 +678,7 @@ main {
             height: 32.7px;
         }
         @media (max-width: $sm_screen) {
-            grid-template-columns: 232px;
+            grid-template-columns: 1fr;
             .columns-2 {
                 grid-column: span 1;
             }
@@ -716,7 +720,7 @@ main {
             }
         }
         @media (max-width: $sm_screen) {
-            grid-template-columns: 232px;
+            grid-template-columns: 1fr;
             .columns-2 {
                 grid-column: span 1;
             }

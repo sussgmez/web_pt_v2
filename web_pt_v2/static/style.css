@@ -660,12 +660,18 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .order-detail #id_installation_message {
-    width: 232px;
+    width: 100%;
   }
 }
 @media (max-width: 868px) {
   .page-aside-section .order-detail {
     margin: 0 auto 1rem auto;
+  }
+}
+@media (max-width: 588px) {
+  .page-aside-section .order-detail {
+    width: 100%;
+    max-width: 344px;
   }
 }
 .page-aside-section .order-customer-form, .page-aside-section .order-form {
@@ -702,7 +708,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .order-customer-form, .page-aside-section .order-form {
-    grid-template-columns: 232px;
+    grid-template-columns: 1fr;
   }
   .page-aside-section .order-customer-form .columns-2, .page-aside-section .order-form .columns-2 {
     grid-column: span 1;
@@ -745,7 +751,7 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-aside-section .order-installation-form {
-    grid-template-columns: 232px;
+    grid-template-columns: 1fr;
   }
   .page-aside-section .order-installation-form .columns-2 {
     grid-column: span 1;
