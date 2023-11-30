@@ -420,7 +420,7 @@ main .header-main h1 {
   height: fit-content;
   max-width: 344px;
   width: 100%;
-  margin: auto;
+  margin: 0 auto;
 }
 .page-aside-section .customer-list .customer-card p {
   margin: 0;
