@@ -812,7 +812,7 @@ main {
             .order-message-contract-number {
                 font-weight: 700;
             }
-            .order-message-address {
+            .order-message-address, .order-message-comment{
                 line-height: 0.75rem;
                 margin-top: 0.25rem;
                 display: inline-block;

@@ -13,7 +13,7 @@ def order_by_date_created(value):
 
 @register.filter
 def not_completed(value):
-    return value.filter(completed=False).filter(closed=False).order_by('-date_created')
+    return value.filter(completed=False).filter(closed=False).order_by('date_assigned')
 
 @register.filter
 def short_address(value):

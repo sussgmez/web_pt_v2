@@ -852,7 +852,7 @@ main .header-main h1 {
 .page-section .technician-list .order-message .order-message-contract-number {
   font-weight: 700;
 }
-.page-section .technician-list .order-message .order-message-address {
+.page-section .technician-list .order-message .order-message-address, .page-section .technician-list .order-message .order-message-comment {
   line-height: 0.75rem;
   margin-top: 0.25rem;
   display: inline-block;

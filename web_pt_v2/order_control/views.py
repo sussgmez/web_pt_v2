@@ -193,8 +193,6 @@ class OrderUpdateView(UpdateView):
         return reverse('order-update', kwargs={'pk':self.object.pk})
     
 
-
-
 class InstallationUpdateView(UpdateView):
     model = Installation
     template_name = "order_control/installation_update.html"

@@ -60,7 +60,7 @@
                                         {{ order.customer.address|short_address }}
                                     </p>
                                     <p>
-                                        <b>{{ order.customer.phone_1 }}</b>{% if order.customer.comment %}<br>{{ order.customer.comment }}{% endif %}<br>{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y H:i" }}{% else %}Sin fecha ni hora definida{% endif %}
+                                        <b>{{ order.customer.phone_1 }}</b>{% if order.customer.comment %}<br><span class="order-message-comment">{{ order.customer.comment }}</span>{% endif %}<br>{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y H:i" }}{% else %}Sin fecha ni hora definida{% endif %}
                                     </p>
                                 </div>
                                 <hr>
