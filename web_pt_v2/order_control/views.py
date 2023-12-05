@@ -271,13 +271,12 @@ def load_excel(request):
                     try: comment = check_nan(values.iloc[11]).capitalize()
                     except: pass
 
-                    if "Migracion" in seller or "Migración" in seller or "Migracion" in comment or "Migración" in comment:
-                        category = "MIG"
-                        seller = ""
+                    if seller != "":
+                        if "Migracion" in seller or "Migración" in seller or "Migracion" in comment or "Migración" in comment:
+                            category = "MIG"
 
-                    if "MUDANZA" in values.iloc[3].upper():
-                        category = "MUD"
-                        seller = ""
+                        if "MUDANZA" in values.iloc[3].upper():
+                            category = "MUD"
 
                     obj.comment = comment
                     obj.seller = seller
