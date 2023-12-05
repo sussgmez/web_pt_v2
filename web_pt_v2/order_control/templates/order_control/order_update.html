@@ -20,13 +20,7 @@
                     <a href="{% url 'customer-update' order.customer.contract_number %}" class="btn">Ver cliente</a>
                     <hr>
                     {% if not order.completed and not order.closed %}
-                        <form action="" method="post" id="id_form_complete_order">
-                            {% csrf_token %}
-                            <input type="hidden" name="completed" id="id_completed" value="true">
-                            <input type="hidden" name="technician" id="id_technician" value="{{form.technician.value}}">
-                            <input type="hidden" name="date_assigned" id="id_date_assigned" value="{{ form.date_assigned.value|date:'Y-m-d\T00:01' }}">
-                        </form>
-                        <button type="submit" class="btn btn-success" onclick="submit_form('id_form_complete_order', '¿Marcar como finalizada?')">Marcar como finalizada</button>
+                        <a href="{% url 'order-complete' order.pk %}" class="btn btn-success">Marcar como finalizada</a>
                     {% endif %}
                     {% if user.is_superuser %}
                         <button href="" onclick="submit_button(`{% url 'order-delete' order.pk %}`, '¿Está seguro que desea eliminar esta orden?')" class="btn btn-danger">Eliminar orden</button>

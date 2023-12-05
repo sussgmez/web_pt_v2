@@ -1,3 +1,5 @@
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 import pandas, math
 from datetime import datetime
 from django.shortcuts import render, redirect
@@ -192,6 +194,10 @@ class OrderUpdateView(UpdateView):
             return reverse('customer-update', kwargs={'pk':self.object.customer.contract_number})
         return reverse('order-update', kwargs={'pk':self.object.pk})
     
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+    
 
 class InstallationUpdateView(UpdateView):
     model = Installation
@@ -212,6 +218,12 @@ class TechnicianListView(ListView):
             return super().get_queryset()   
         return Technician.objects.filter(pk=self.request.user.technician.id)
 
+
+def order_complete(request, pk):
+    order = Order.objects.get(pk=pk)
+    order.completed = True
+    order.save()
+    return redirect('order-update', pk=order.pk)
 
 @permission_required('order_control.add_order', raise_exception=True)
 def order_create(request, pk):
@@ -311,4 +323,16 @@ def load_excel(request):
             messages.success(request, 'Órdenes importadas con éxito')
 
     return redirect('customer-list')
+
+def fix_models(request):
+    df = pandas.read_excel('completed_orders.xlsx')
+    completed_orders = []
+
+    for id, row in df.iterrows():
+        customer = Customer.objects.get(pk=row['contract_number'])
+        last_order = customer.orders.all().order_by('-date_created')[0]
+        last_order.completed = True
+        last_order.save()
+
+
 

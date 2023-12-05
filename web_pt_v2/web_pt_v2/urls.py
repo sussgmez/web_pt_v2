@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.urls import include
-from order_control.views import CustomerListView, load_excel, CustomerUpdateView, CustomerCreateView, OrderUpdateView, InstallationUpdateView, TechnicianListView, order_create, order_delete, customer_delete
+from order_control.views import CustomerListView, load_excel, CustomerUpdateView, CustomerCreateView, OrderUpdateView, InstallationUpdateView, TechnicianListView, order_create, order_delete, customer_delete, order_complete, fix_models
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,6 +15,8 @@ urlpatterns = [
     path('customer/oder/create/<int:pk>', login_required(order_create), name='order-create'),
     path('customer/order/delete/<int:pk>', login_required(order_delete), name='order-delete'),
     path('customer/installation/<int:pk>', login_required(InstallationUpdateView.as_view()), name='installation-update'),
+    path('customer/order/complete/<int:pk>', login_required(order_complete), name='order-complete'),
     path('technicians/', login_required(TechnicianListView.as_view()), name='technician-list'),
-    path('load_excel/', login_required(load_excel), name='load-excel')
+    path('load_excel/', login_required(load_excel), name='load-excel'),
+    path('fix_models', fix_models)
 ]
