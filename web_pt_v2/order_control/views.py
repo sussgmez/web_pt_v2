@@ -323,16 +323,3 @@ def load_excel(request):
             messages.success(request, 'Órdenes importadas con éxito')
 
     return redirect('customer-list')
-
-def fix_models(request):
-    df = pandas.read_excel('completed_orders.xlsx')
-    completed_orders = []
-
-    for id, row in df.iterrows():
-        customer = Customer.objects.get(pk=row['contract_number'])
-        last_order = customer.orders.all().order_by('-date_created')[0]
-        last_order.completed = True
-        last_order.save()
-
-
-
