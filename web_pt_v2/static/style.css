@@ -190,8 +190,8 @@ input[type=number] {
   padding: 0.75rem 1rem;
 }
 .div-login #id_form_login .text-error {
-  background-color: rgba(243, 173, 43, 0.05);
-  color: #f3ad2b;
+  background-color: rgba(226, 75, 75, 0.05);
+  color: #e24b4b;
   font-weight: 600;
   font-size: 0.8rem;
   padding: 0.5rem;

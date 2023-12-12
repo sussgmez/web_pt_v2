@@ -187,8 +187,8 @@ input[type=number] {appearance: textfield;}
             }
         }
         .text-error {
-            background-color: rgba($warning-color, $alpha: 0.05);
-            color: $warning-color;
+            background-color: rgba($danger-color, $alpha: 0.05);
+            color: $danger-color;
             font-weight: 600;
             font-size: 0.8rem;
             padding: 0.5rem;

@@ -42,10 +42,20 @@
                         <div>
                             <label for="id_plan">{{ form.plan.label }}</label>
                             {{ form.plan }}
+                            {% if form.plan.errors %}
+                                {% for error in form.plan.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div>
                             <label for="id_customer_type">{{ form.customer_type.label }}</label>
                             {{ form.customer_type }}
+                            {% if form.customer_type.errors %}
+                                {% for error in form.customer_type.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>  
                         <div class="columns-2">
                             <label for="id_address">{{ form.address.label }}*</label>
@@ -68,26 +78,65 @@
                         <div>
                             <label for="id_phone_2">{{ form.phone_2.label }}</label>
                             {{ form.phone_2 }}
+                            {% if form.phone_2.errors %}
+                                {% for error in form.phone_2.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div>
                             <label for="id_email">{{ form.email.label }}</label>
                             {{ form.email }}
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div>
                             <label for="id_category">{{ form.category.label }}</label>
                             {{ form.category }}
+                            {% if form.category.errors %}
+                                {% for error in form.category.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div>
                             <label for="id_assigned_to">{{ form.assigned_to.label }}</label>
                             {{ form.assigned_to }}
+                            {% if form.assigned_to.errors %}
+                                {% for error in form.assigned_to.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div>
                             <label for="id_seller">{{ form.seller.label }}</label>
                             {{ form.seller }}
+                            {% if form.seller.errors %}
+                                {% for error in form.seller.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="id_date_assigned">{{ form.date_assigned.label }}</label>
+                            {{ form.date_assigned }}
+                            {% if form.date_assigned.errors %}
+                                {% for error in form.date_assigned.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div class="columns-2">
                             <label for="id_comment">{{ form.comment.label }}</label>
                             {{ form.comment }}
+                            {% if form.comment.errors %}
+                                {% for error in form.comment.errors %}
+                                    <p class="text-input-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </form>
                     <button type="submit" class="btn btn-submit" onclick="document.querySelector('#id_form_customer_update').submit()">Añadir</button>

@@ -55,7 +55,10 @@
                             <label for="id_sort_by" class="label-search">Ordenar por</label>
                             <select id="id_sort_by" class="input-search" name="sort-by">
                                 <option value="-date_created" {{ sort_opt_1 }}>Fecha de creación</option>
-                                <option value="-pk" {{ sort_opt_2 }}>Nro. De Contrato</option>
+                                <option value="date_created" {{ sort_opt_2 }}>Fecha de creación (-)</option>
+                                <option value="-date_assigned" {{ sort_opt_3 }}>Fecha Recibida</option>
+                                <option value="date_assigned" {{ sort_opt_4 }}>Fecha Recibida (-)</option>
+                                <option value="-pk" {{ sort_opt_5 }}>Nro. De Contrato</option>
                             </select>
                         </div>
                         <input class="btn" type="submit" value="Aplicar filtros">
@@ -94,15 +97,19 @@
                                 <p class="label nowrap">Plan</p>
                                 <p class="nowrap">{{ customer.get_plan_display }}</p>
                             </div>
+                            <div class="columns-2">
+                                <p class="label nowrap">Fecha Recibida</p>
+                                <p class="nowrap">{% if customer.date_assigned %}{{ customer.date_assigned|date:"d/m/Y" }}{% else %}--- ---{% endif %}</p>
+                            </div>
                             <hr class="columns-2">
                             {% with order=customer.orders.all|last_order %}
                                 {% if order.technician or order.completed %}
                                     <div>
-                                        <p class="label nowrap">Técnico asignado</p>
+                                        <p class="label nowrap">Técnico</p>
                                         <p class="nowrap">{% if order.technician %}{{ order.technician.user.first_name }} {{ order.technician.user.last_name }}{% else %}--- ---{% endif %}</p>
                                     </div>
                                     <div>
-                                        <p class="label nowrap">Fecha y hora</p>
+                                        <p class="label nowrap">Fecha asignada</p>
                                         <p class="nowrap">{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y | H:i" }}{% else %}--- ---{% endif %}</p>
                                     </div>
                                 {% else %}

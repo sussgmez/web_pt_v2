@@ -144,7 +144,10 @@ class CustomerListView(ListView):
         try: 
             sort_by = self.request.GET['sort-by']
             if sort_by == '-date_created': context['sort_opt_1'] = 'selected'
-            elif sort_by == '-pk': context['sort_opt_2'] = 'selected'
+            elif sort_by == 'date_created': context['sort_opt_2'] = 'selected'
+            elif sort_by == '-date_assigned': context['sort_opt_3'] = 'selected'
+            elif sort_by == 'date_assigned': context['sort_opt_4'] = 'selected'
+            elif sort_by == '-pk': context['sort_opt_5'] = 'selected'
             context["sort_by"] = sort_by
         except: pass
 
@@ -175,7 +178,6 @@ class CustomerUpdateView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, 'Cambios guardados con éxito')
         return reverse('customer-update', kwargs={'pk':self.object.contract_number})
-
 
 class OrderUpdateView(UpdateView):
     model = Order
@@ -248,6 +250,13 @@ def check_nan(value):
     if type(value)==float and math.isnan(value):return ""
     return value
 
+def format_phone_number(value):
+    try:
+        return "0" + str(math.trunc(value))
+    except: 
+        pass
+    return value
+
 def load_excel(request):
     if request.user.is_superuser:
         if request.POST:
@@ -269,57 +278,60 @@ def load_excel(request):
                     obj, created = Customer.objects.get_or_create(contract_number=values.iloc[0])
                 except: pass
                 if created:
-                    obj.customer_name = values.iloc[1].title()
-                    obj.phone_1 = values.iloc[5]
-                    obj.phone_2 = check_nan(values.iloc[6])
-                    obj.address = values.iloc[7].title()
-                    obj.email = check_nan(values.iloc[8])
-                    obj.assigned_to = check_nan(values.iloc[10]).title()
-                    obj.date_assigned = received_date
-                    
-                    category = "INS"
-                    seller = check_nan(values.iloc[3]).title()
-                    comment = ""
-                    try: comment = check_nan(values.iloc[11]).capitalize()
-                    except: pass
+                    try:
+                        obj.customer_name = values.iloc[1].title()
+                        obj.phone_1 = format_phone_number(values.iloc[5])
+                        obj.phone_2 = check_nan(values.iloc[6])
+                        obj.address = values.iloc[7].title()
+                        obj.email = check_nan(values.iloc[8])
+                        obj.assigned_to = check_nan(values.iloc[10]).title()
+                        obj.date_assigned = received_date
+                        
+                        category = "INS"
+                        seller = check_nan(values.iloc[3]).title()
+                        comment = ""
+                        try: comment = check_nan(values.iloc[11]).capitalize()
+                        except: pass
 
-                    if seller != "":
-                        if "Migracion" in seller or "Migración" in seller or "Migracion" in comment or "Migración" in comment:
-                            category = "MIG"
+                        if seller != "":
+                            if "Migracion" in seller or "Migración" in seller or "Migracion" in comment or "Migración" in comment:
+                                category = "MIG"
 
-                        if "MUDANZA" in values.iloc[3].upper():
-                            category = "MUD"
+                            if "MUDANZA" in values.iloc[3].upper():
+                                category = "MUD"
 
-                    obj.comment = comment
-                    obj.seller = seller
-                    obj.category = category         
+                        obj.comment = comment
+                        obj.seller = seller
+                        obj.category = category         
 
-                    plan = values.iloc[9].upper()
-                    cod_plan = 'BR'
-
-                    if "BASICO PLUS" in plan:
-                        cod_plan = 'BP'
-                    elif "BASICO" in plan:
-                        cod_plan = 'BA'
-                    elif "BRONCE" in plan:
+                        plan = values.iloc[9].upper()
                         cod_plan = 'BR'
-                    elif "PLATA" in plan:
-                        cod_plan = 'PL'
-                    elif "ORO" in plan:
-                        cod_plan = 'OR'
-                    elif "EMPRENDEDOR" in plan:
-                        cod_plan = 'EM'
-                    elif "PRODUCTIVO PRO" in plan:
-                        cod_plan = 'PP'
-                    elif "PRODUCTIVO" in plan:
-                        cod_plan = 'PR'
-                    elif "VISIONARIO PRO" in plan:
-                        cod_plan = 'VP'
 
-                    obj.plan = cod_plan
+                        if "BASICO PLUS" in plan:
+                            cod_plan = 'BP'
+                        elif "BASICO" in plan:
+                            cod_plan = 'BA'
+                        elif "BRONCE" in plan:
+                            cod_plan = 'BR'
+                        elif "PLATA" in plan:
+                            cod_plan = 'PL'
+                        elif "ORO" in plan:
+                            cod_plan = 'OR'
+                        elif "EMPRENDEDOR" in plan:
+                            cod_plan = 'EM'
+                        elif "PRODUCTIVO PRO" in plan:
+                            cod_plan = 'PP'
+                        elif "PRODUCTIVO" in plan:
+                            cod_plan = 'PR'
+                        elif "VISIONARIO PRO" in plan:
+                            cod_plan = 'VP'
 
-                    obj.save()
-            
+                        obj.plan = cod_plan
+
+                        obj.save()
+                    except:
+                        obj.delete()
+
             messages.success(request, 'Órdenes importadas con éxito')
-
+            
     return redirect('customer-list')
