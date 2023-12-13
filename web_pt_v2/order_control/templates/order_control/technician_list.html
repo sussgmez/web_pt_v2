@@ -17,6 +17,11 @@
                     <div class="technician-content">
                         <div class="technician-orders">
                             {% for order in technician.orders.all|not_completed %}
+                                {% with prev_order=technician.orders.all|not_completed|previous:forloop.counter0 %}
+                                    {% if order.date_assigned|date:"d,m,Y" != prev_order.date_assigned|date:"d,m,Y" %}
+                                        <p class="orders-date">{{ order.date_assigned|date:"d/m/Y" }}</p>
+                                    {% endif %}
+                                {% endwith %}
                                 <a class="order" href="{% url 'order-update' order.pk %}">
                                     <p class="order-header">OR-{{ order.pk }} | C{{ order.customer.contract_number }}</p>
                                     <hr>

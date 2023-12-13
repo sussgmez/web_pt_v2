@@ -179,6 +179,7 @@ class CustomerUpdateView(UpdateView):
         messages.success(self.request, 'Cambios guardados con éxito')
         return reverse('customer-update', kwargs={'pk':self.object.contract_number})
 
+
 class OrderUpdateView(UpdateView):
     model = Order
     template_name = "order_control/order_update.html"

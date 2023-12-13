@@ -859,6 +859,17 @@ main {
                 grid-column: span 2;
             }
         }
+        .orders-date {
+            grid-column: 1/-1;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: $primary-color;
+            text-align: center;
+            margin-top: 2rem;
+            &:first-child {
+                margin: 0;
+            }
+        }
         .p-technician-without-orders {
             padding: 1rem;
             font-weight: 700;

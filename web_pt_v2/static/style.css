@@ -898,6 +898,17 @@ main .header-main h1 {
 .page-section .technician-orders .order .columns-2 {
   grid-column: span 2;
 }
+.page-section .technician-orders .orders-date {
+  grid-column: 1/-1;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #001736;
+  text-align: center;
+  margin-top: 2rem;
+}
+.page-section .technician-orders .orders-date:first-child {
+  margin: 0;
+}
 .page-section .technician-orders .p-technician-without-orders {
   padding: 1rem;
   font-weight: 700;
