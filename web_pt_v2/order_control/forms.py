@@ -7,7 +7,7 @@ class CustomerUpdateForm(forms.ModelForm):
         model = Customer
         fields = ['contract_number', 'category', 'customer_name', 'address', 'phone_1', 'phone_2', 'email', 'plan', 'customer_type', 'date_assigned', 'assigned_to', 'seller', 'comment']
         widgets = {
-            "contract_number": forms.TextInput(attrs={'hidden':True}),
+            "contract_number": forms.TextInput(attrs={'readonly':True}),
             "address": forms.Textarea(attrs={'rows':'4'}),
             "comment": forms.Textarea(attrs={'rows':'3'}),
             "date_assigned": forms.DateInput(format='%Y-%m-%d', attrs={'type':'date'}),

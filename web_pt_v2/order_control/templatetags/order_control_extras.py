@@ -1,4 +1,5 @@
 from django import template
+from datetime import datetime, timezone
 
 register = template.Library()
 
@@ -21,6 +22,27 @@ def previous(value, i):
         return value[i - 1]
     except:
         return None
+
+@register.filter
+def get_dates(list):
+    dates = []
+    for element in list:
+        try:
+            if element.date_assigned.date() not in dates:
+                date = element.date_assigned.replace(tzinfo=timezone.utc).astimezone(tz=None)
+                dates.append(date.date())
+        except: pass
+    return dates
+
+@register.filter
+def get_orders(value, date):
+    value = value.filter(date_assigned__year=date.year, date_assigned__month=date.month, date_assigned__day=date.day)
+    return value
+
+@register.filter
+def get_undefined(value):
+    value = value.filter(date_assigned=None)
+    return value
 
 
 @register.filter

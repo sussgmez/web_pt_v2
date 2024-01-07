@@ -1,10 +1,11 @@
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 import pandas, math
+from io import BytesIO
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView, TemplateView
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from .models import Customer, Order, Installation, Technician
@@ -14,9 +15,9 @@ from .forms import CustomerUpdateForm, OrderUpdateForm, InstallationUpdateForm, 
 class CustomerListView(ListView):
     model = Customer
     template_name = "customer_list.html"
-    paginate_by = 6
+    paginate_by = 50
     ordering = "-date_created"
-    
+
     def get_queryset(self):
         s_text = ""
         try: s_text = self.request.GET['search-text']
@@ -118,10 +119,10 @@ class CustomerListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         if self.request.user.is_superuser:
             context['technicians'] = Technician.objects.all()
-            try: context["selected_technician"] = self.request.GET['technician']
+            try: 
+                context["selected_technician"] = self.request.GET['technician']
             except: pass
         else: 
             context['technicians'] = Technician.objects.filter(code=self.request.user.technician.code)
@@ -163,10 +164,11 @@ class CustomerListView(ListView):
 
 class CustomerCreateView(CreateView):
     model = Customer
-    template_name = "order_control/customer_create.html"
     form_class = CustomerForm
+    template_name = 'order_control/customer_create.html'
 
     def get_success_url(self):
+        messages.success(self.request, f'Cliente {self.object.contract_number} creado con éxito')
         return reverse('customer-list')
 
 
@@ -176,7 +178,7 @@ class CustomerUpdateView(UpdateView):
     form_class = CustomerUpdateForm
 
     def get_success_url(self):
-        messages.success(self.request, 'Cambios guardados con éxito')
+        messages.success(self.request, f'Cliente {self.object.contract_number} modificado con éxito')
         return reverse('customer-update', kwargs={'pk':self.object.contract_number})
 
 
@@ -196,10 +198,6 @@ class OrderUpdateView(UpdateView):
         if self.object.closed:
             return reverse('customer-update', kwargs={'pk':self.object.customer.contract_number})
         return reverse('order-update', kwargs={'pk':self.object.pk})
-    
-    def form_invalid(self, form):
-        print(form.errors)
-        return super().form_invalid(form)
     
 
 class InstallationUpdateView(UpdateView):
@@ -222,11 +220,192 @@ class TechnicianListView(ListView):
         return Technician.objects.filter(pk=self.request.user.technician.id)
 
 
+class Schedule(TemplateView):
+    template_name = "order_control/schedule.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            context["technicians"] = Technician.objects.all()
+        else: 
+            context["technicians"] = Technician.objects.filter(pk=self.request.user.technician.id)
+        return context
+    
+
 def order_complete(request, pk):
     order = Order.objects.get(pk=pk)
     order.completed = True
     order.save()
     return redirect('order-update', pk=order.pk)
+
+def export_customers(request):
+    s_text = ""
+    try: s_text = request.GET['search-text']
+    except: pass
+
+    status = ""
+    try: status = request.GET['status']
+    except: pass
+
+    min_date_get = ""
+    try: 
+        min_date_get = request.GET['min-date']
+    except: pass
+    
+    max_date_get = ""
+    try: 
+        max_date_get = request.GET['max-date']
+    except: pass
+
+    technician = ""
+    try: 
+        if request.user.is_superuser:
+            technician = request.GET['technician']
+        else:
+            technician = request.user.technician.code
+    except: pass
+
+    customers = Customer.objects.filter(pk__contains=s_text) | Customer.objects.filter(address__contains=s_text) | Customer.objects.filter(customer_name__contains=s_text)
+
+    if technician != "":
+        for customer in customers:
+            try: 
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.technician.code != technician or (last_order.closed and not request.user.is_superuser): 
+                    customers = customers.exclude(contract_number=customer.contract_number)
+                
+
+            except: customers = customers.exclude(contract_number=customer.contract_number)
+
+    if min_date_get != "" or max_date_get != "":
+        for customer in customers:
+            try:last_order = customer.orders.all().order_by('-date_created')[0]
+            except: continue
+
+            if last_order.date_assigned == None:
+                customers = customers.exclude(contract_number=customer.contract_number)
+                continue
+            
+            try: min_date = datetime.strptime(min_date_get + ' +0000', '%Y-%m-%d %z')
+            except: min_date = datetime.strptime('1999-01-01 +0000', '%Y-%m-%d %z')
+
+            try: max_date = datetime.strptime(max_date_get + ' +0000', '%Y-%m-%d %z')
+            except: max_date = datetime.strptime('2050-01-01 +0000', '%Y-%m-%d %z')
+
+            date_assigned = datetime(last_order.date_assigned.year, last_order.date_assigned.month, last_order.date_assigned.day, tzinfo=last_order.date_assigned.tzinfo)
+
+            if min_date > date_assigned or date_assigned > max_date:
+                customers = customers.exclude(contract_number=customer.contract_number)
+
+    if status == 'status_to_assign':
+        for customer in customers:
+            try: 
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.completed==True or last_order.technician!=None:
+                    customers = customers.exclude(contract_number=customer.contract_number)
+            except: continue
+
+    elif status == 'status_assigned':
+        for customer in customers:
+            try:
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.completed==True or last_order.technician==None or last_order.closed==True:
+                    customers = customers.exclude(contract_number=customer.contract_number)
+            except:
+                customers = customers.exclude(contract_number=customer.contract_number)
+    
+    elif status == 'status_completed':
+        for customer in customers:
+            try: 
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.completed!=True:
+                    customers = customers.exclude(contract_number=customer.contract_number)
+            except: 
+                customers = customers.exclude(contract_number=customer.contract_number)
+
+    elif status == 'status_closed':
+        for customer in customers:
+            try: 
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.closed!=True:
+                    customers = customers.exclude(contract_number=customer.contract_number)
+            except: customers = customers.exclude(contract_number=customer.contract_number)
+  
+    df = pandas.DataFrame()
+
+    for customer in customers:
+        last_order = ""
+        try:
+            last_order = customer.orders.all().order_by('-date_created')[0]
+        except: pass
+
+        day_name = ""
+        date = ""
+        try: 
+            day_name = last_order.date_assigned.strftime('%A')
+            date = last_order.date_assigned.strftime('%d/%m/%Y')
+        except: pass
+
+        ext_drop = ""
+        drop_used = ""
+        try: 
+            if last_order.installation.drop_used > 250: 
+                ext_drop = last_order.installation.drop_used
+            else: 
+                drop_used = last_order.installation.drop_used
+        except: pass
+
+        hook_used = ""
+        try: 
+            hook_used = last_order.installation.hook_used
+        except: pass
+
+        drop_serial = ""
+        try: 
+            drop_serial = last_order.installation.drop_serial
+        except: pass
+
+        onu_serial = ""
+        try: 
+            onu_serial = last_order.installation.onu_serial
+        except: pass
+
+        router_serial = ""
+        try: 
+            router_serial = last_order.installation.router_serial
+        except: pass
+
+        technician = ""
+        try: 
+            technician = last_order.technician
+        except: pass
+
+        df_aux = pandas.DataFrame([[
+            day_name,
+            date,
+            customer.contract_number, 
+            customer.customer_name, 
+            ext_drop,
+            drop_used,
+            hook_used,
+            drop_serial,
+            onu_serial,
+            router_serial,
+            technician]])  
+            
+        df = pandas.concat([df, df_aux])
+
+
+    with BytesIO() as b:
+        with pandas.ExcelWriter(b) as writer:
+            df.to_excel(writer, sheet_name='DATA 1', index=False)
+        filename = f'{str(datetime.now().strftime("%d-%m-%Y %H%M%S"))}.xlsx'
+        res = HttpResponse(
+            b.getvalue(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        res['Content-Disposition'] = f'attachment; filename={filename}'
+        return res
 
 @permission_required('order_control.add_order', raise_exception=True)
 def order_create(request, pk):
@@ -270,6 +449,8 @@ def load_excel(request):
             try:
                 received_date = datetime(day=int(received_date_txt[0:2]), month=int(received_date_txt[2:4]), year=int(received_date_txt[4:8]))
             except: pass
+
+            message = "No se encontraron clientes para añadir."
 
             for id, values in df.iterrows():
                 obj = ""
@@ -330,9 +511,14 @@ def load_excel(request):
                         obj.plan = cod_plan
 
                         obj.save()
+
+                        if message == "No se encontraron clientes para añadir." : message = f"Se han añadido los siguientes clientes: {obj.contract_number}" 
+                        else: message += f", {obj.contract_number}"
                     except:
                         obj.delete()
 
-            messages.success(request, 'Órdenes importadas con éxito')
+            messages.success(request, message)
             
     return redirect('customer-list')
+
+

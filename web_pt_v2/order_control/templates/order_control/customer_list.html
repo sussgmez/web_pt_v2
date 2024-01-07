@@ -6,54 +6,57 @@
 
 {% block content %}
     <main>
-        <div class="header-main">
+        <div class="page-customers">
             <h1>Clientes</h1>
-        </div>
-        <div class="page-aside-section">
-            <aside class="aside">
-                <div class="filters-aside">
-                    <p class="filters-header">Buscar cliente</p>
+            {% if user.is_superuser %}
+                <div class="import-btns">
+                    <form action="{% url 'load-excel' %}" method="post" enctype="multipart/form-data" id="select-excel-file" style="display: none;">
+                        {% csrf_token %}
+                        <input type="file" name="excel_file" id="input-excel-file" onchange="this.form.submit()" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none;">
+                    </form>
+                    <button class="btn" onclick="document.getElementById('input-excel-file').click()">Importar .xlsx</button>
+                    <a class="btn" href="{% url 'customer-create' %}">Añadir +</a>
+                </div>
+            {% endif %} 
+            <div class="filters">
+                <form method="get" class="filters-form">
+                    <div class="filter filter-text">
+                        <input type="text" name="search-text" id="id_text_search" class="filter-input" placeholder="Buscar..." value="{{ search_text }}">
+                    </div>
+                    <div class="filter">
+                        <label for="id_status_search" class="filter-label">Status: </label>
+                        <select id="id_status_search" class="filter-input" name="status" onchange="active_inputs(this)">
+                            <option value="none" {{ status_opt_1 }}>--- ---</option>
+                            <option value="status_completed" {{ status_opt_2 }}>Instalación finalizada</option>
+                            <option value="status_assigned" {{ status_opt_3 }}>Instalación asignada</option>
+                            {% if user.is_superuser %}
+                                <option value="status_to_assign" {{ status_opt_4 }}>Instalación por asignar</option>
+                                <option value="status_closed" {{ status_opt_5 }}>Instalación cancelada</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="filter filter-assigned-customer">
+                        <label for="id_min_date" class="filter-label">Desde: </label>
+                        <input type="date" name="min-date" id="id_min_date" class="filter-input" value="{{ min_date }}" onchange="check_dates()">
+                    </div>
+                    <div class="filter filter-assigned-customer">
+                        <label for="id_max_date" class="filter-label">Hasta: </label>
+                        <input type="date" name="max-date" id="id_max_date" class="filter-input" value="{{ max_date }}" onchange="check_dates()">
+                    </div>
+                    <div class="filter filter-assigned-customer filter-technician">
+                        <label for="id_select_technician" class="filter-label">Técnico: </label>
+                        <select name="technician" id="id_select_technician" class="filter-input">
+                            <option value="">--- ---</option>
+                            {% for technician in technicians %}
+                                <option value="{{ technician.code }}" {% if technician.code == selected_technician %}selected{% endif %}>{{ technician.user.first_name }} {{ technician.user.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <hr>
-                    <form action="" method="get" id="id_form_filters">
-                        <div>
-                            <label for="id_text_search" class="label-search">Buscar</label>
-                            <input type="text" name="search-text" id="id_text_search" class="input-search" placeholder="Buscar..." value="{{ search_text }}">
-                        </div>
-                        <div>
-                            <label for="id_status_search" class="label-search">Status</label>
-                            <select id="id_status_search" class="input-search" name="status" onchange="active_inputs(this)">
-                                <option value="none" {{ status_opt_1 }}>--- ---</option>
-                                <option value="status_completed" {{ status_opt_2 }}>Instalación finalizada</option>
-                                <option value="status_assigned" {{ status_opt_3 }}>Instalación asignada</option>
-                                {% if user.is_superuser %}
-                                    <option value="status_to_assign" {{ status_opt_4 }}>Instalación por asignar</option>
-                                    <option value="status_closed" {{ status_opt_5 }}>Instalación cancelada</option>
-                                {% endif %}
-                            </select>
-                        </div>
-                        <p class="label-search-2">Fecha asignada</p>
-                        <div>
-                            <label for="id_min_date" class="label-search">Desde</label>
-                            <input type="date" name="min-date" id="id_min_date" class="input-search" value="{{ min_date }}" onchange="check_dates()" disabled>
-                        </div>
-                        <div>
-                            <label for="id_max_date" class="label-search">Hasta</label>
-                            <input type="date" name="max-date" id="id_max_date" class="input-search" value="{{ max_date }}" onchange="check_dates()" disabled>
-                        </div>
-                        {% if user.is_superuser %}
-                            <div>
-                                <label class="label-search" for="id_select_technician">Técnico asignado</label>
-                                <select name="technician" id="id_select_technician" class="input-search" disabled>
-                                    <option value="">--- ---</option>
-                                    {% for technician in technicians %}
-                                        <option value="{{ technician.code }}" {% if technician.code == selected_technician %}selected{% endif %}>{{ technician.user.first_name }} {{ technician.user.last_name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        {% endif %}
-                        <div>
-                            <label for="id_sort_by" class="label-search">Ordenar por</label>
-                            <select id="id_sort_by" class="input-search" name="sort-by">
+                    <div class="filter-btns">
+                        <div class="filter select-sort-by">
+                            <label for="id_sort_by" class="filter-label">Ordenar:</label>
+                            <select id="id_sort_by" class="filter-input" name="sort-by">
                                 <option value="-date_created" {{ sort_opt_1 }}>Fecha de creación</option>
                                 <option value="date_created" {{ sort_opt_2 }}>Fecha de creación (-)</option>
                                 <option value="-date_assigned" {{ sort_opt_3 }}>Fecha Recibida</option>
@@ -61,101 +64,131 @@
                                 <option value="-pk" {{ sort_opt_5 }}>Nro. De Contrato</option>
                             </select>
                         </div>
-                        <input class="btn" type="submit" value="Aplicar filtros">
-                        <a href="{% url 'customer-list' %}" class="btn btn-danger">Borrar filtros</a>
-                    </form>
-                    {% if user.is_superuser %}
-                        <form action="{% url 'load-excel' %}" method="post" enctype="multipart/form-data" id="select-excel-file">
-                            {% csrf_token %}
-                            <input type="file" name="excel_file" id="input-excel-file" onchange="this.form.submit()" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display: none;">
-                        </form>
-                        <hr>
-                        <button class="btn btn-info" onclick="document.getElementById('input-excel-file').click()">Importar .xlsx</button>
-                        <a type="button" class="btn btn-info" href="{% url 'customer-create' %}">Añadir +</a>
-                    {% endif %}
-                </div>
-            </aside>
-            <section class="section">
-                <div class="customer-list">
-                    {% for customer in customer_list %}
-                        <a class="customer-card" href="{% url 'customer-update' customer.contract_number %}">
-                            <p class="customer-pk columns-2">C{{ customer.contract_number }}</p>
-                            <hr class="columns-2">
-                            <div class="columns-2">
-                                <p class="label nowrap">Nombre Cliente</p>
-                                <p class="nowrap">{{ customer.customer_name }}</p>
-                            </div>
-                            <div class="columns-2">
-                                <p class="label nowrap">Dirección</p>
-                                <p class="customer-address">{{ customer.address }}</p>
-                            </div>
-                            <div>
-                                <p class="label nowrap">Nro. De Teléfono</p>
-                                <p class="nowrap">{{ customer.phone_1 }}</p>
-                            </div>
-                            <div>
-                                <p class="label nowrap">Plan</p>
-                                <p class="nowrap">{{ customer.get_plan_display }}</p>
-                            </div>
-                            <div class="columns-2">
-                                <p class="label nowrap">Fecha Recibida</p>
-                                <p class="nowrap">{% if customer.date_assigned %}{{ customer.date_assigned|date:"d/m/Y" }}{% else %}--- ---{% endif %}</p>
-                            </div>
-                            <hr class="columns-2">
-                            {% with order=customer.orders.all|last_order %}
-                                {% if order.technician or order.completed %}
-                                    <div>
-                                        <p class="label nowrap">Técnico</p>
-                                        <p class="nowrap">{% if order.technician %}{{ order.technician.user.first_name }} {{ order.technician.user.last_name }}{% else %}--- ---{% endif %}</p>
-                                    </div>
-                                    <div>
-                                        <p class="label nowrap">Fecha asignada</p>
-                                        <p class="nowrap">{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y | H:i" }}{% else %}--- ---{% endif %}</p>
-                                    </div>
-                                {% else %}
-                                    <div class="columns-2">
-                                        <p class="label nowrap">Información extra</p>
-                                        <p>{% if order.extra_order_comment %}{{ order.extra_order_comment }}{% else %}--- ---{% endif %}</p>
-                                    </div>
-                                {% endif %}
-                                <div class="columns-2">
-                                    {% if order.closed %}<p class="p-status p-closed">Instalación cancelada</p>
-                                    {% elif order.completed %}<p class="p-status p-completed">Instalación finalizada</p>
-                                    {% elif order.technician %}<p class="p-status p-assigned">Instalación asignada</p>
-                                    {% else %}<p class="p-status p-to-assign">Instalación por asignar</p>
-                                    {% endif %}
+                        <input class="btn btn-info" type="submit" value="Aplicar filtros">
+                        {% if user.is_superuser %}
+                            <a class="btn btn-success" href="customer/export?search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}&technician={{ selected_technician }}&min-date={{ min_date }}&max-date={{ max_date }}">Exportar</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <div class="customer-list">
+                {% for customer in customer_list %}
+                    <a href="{% url 'customer-update' customer.pk %}" class="customer-card">
+                        <div class="colspan-2">
+                            <p class="contract-number">{{ customer.contract_number }}</p>
+                        </div>
+                        <hr class="colspan-2">
+                        <div class="colspan-2">
+                            <p class="label">Nombre Cliente</p>
+                            <p class="customer-data name">{{ customer.customer_name }}</p>
+                        </div>
+                        <div class="colspan-2">
+                            <p class="label">Dirección</p>
+                            <p class="customer-data address">{{ customer.address }}</p>
+                        </div>
+                        <div class="colspan-1">
+                            <p class="label">Nro. Teléfono</p>
+                            <p class="customer-data phone_1">{{ customer.phone_1 }}</p>
+                        </div>
+                        <div class="colspan-1">
+                            <p class="label">Plan</p>
+                            <p class="customer-data plan">{{ customer.get_plan_display }}</p>
+                        </div>
+                        <div class="colspan-1">
+                            <p class="label">Tipo de cliente</p>
+                            <p class="customer-data phone_1">{{ customer.get_customer_type_display }}</p>
+                        </div>
+                        <div class="colspan-1">
+                            <p class="label">Fecha Recibido</p>
+                            <p class="customer-data assigned_date">{% if customer.date_assigned %}{{ customer.date_assigned|date:"d/m/Y" }}{% else %}--- ---{% endif %}</p>
+                        </div>
+                        <hr class="colspan-2">
+                        {% with order=customer.orders.all|last_order %}
+                            {% if order.technician or order.completed %}
+                                <div class="colspan-1">
+                                    <p class="label">Técnico</p>
+                                    <p class="customer-data technician">{% if order.technician %}{{ order.technician.user.first_name }} {{ order.technician.user.last_name }}{% else %}--- ---{% endif %}</p>
                                 </div>
-                            {% endwith %}
-                        </a>
-                    {% empty %}
-                        <p class="customers-not-found">Sin resultados</p>
-                    {% endfor %}
-                </div>
-                <hr class="section-divider">
-                <div class="buttons-prev-next">
-                    <a {% if page_obj.has_previous %}href="?page={{ page_obj.previous_page_number }}&search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}" class='btn btn-prev btn-active'{% else %} class="btn btn-prev" {% endif %}>< Anterior</a>
-                    <a {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}&search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}" class='btn btn-next btn-active'{% else %} class="btn btn-next" {% endif %}>Siguiente ></a>
-                </div>
-            </section>
+                                <div class="colspan-1">
+                                    <p class="label">Fecha asignada</p>
+                                    <p class="customer-data technician_assigned_date">{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y | H:i" }}{% else %}--- ---{% endif %}</p>
+                                </div>
+                            {% else %}
+                                <div class="colspan-2">
+                                    <p class="label">Información extra</p>
+                                    <p class="comment">{% if order.extra_order_comment %}{{ order.extra_order_comment }}{% else %}--- ---{% endif %}</p>
+                                </div>
+                            {% endif %}
+                            <div class="colspan-2">
+                                {% if order.closed %}<p class="p-status p-closed">Instalación cancelada</p>
+                                {% elif order.completed %}<p class="p-status p-completed">Instalación finalizada</p>
+                                {% elif order.technician %}<p class="p-status p-assigned">Instalación asignada</p>
+                                {% else %}<p class="p-status p-to-assign">Instalación por asignar</p>
+                                {% endif %}
+                            </div>
+                        {% endwith %}
+                    </a>
+                {% empty %}
+                    <p class="customers-not-found">Sin resultados</p>
+                {% endfor %}
+            </div>
+            <div class="buttons-prev-next">
+                <a {% if page_obj.has_previous %}href="?page={{ page_obj.previous_page_number }}&search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}&technician={{ selected_technician }}&min-date={{ min_date }}&max-date={{ max_date }}" class='btn btn-prev'{% else %} class="btn btn-prev btn-disabled" {% endif %}>< Anterior</a>
+                <a {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}&search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}&technician={{ selected_technician }}&min-date={{ min_date }}&max-date={{ max_date }}" class='btn btn-next'{% else %} class="btn btn-next btn-disabled" {% endif %}>Siguiente ></a>
+            </div>
         </div>
     </main>
 
+    <!-- MESSAGES -->
     {% if messages %}
         <div id="id_alert_messages">
             {% for message in messages %}
-                <div class="message">
+                <div class="message" id="message_{{ forloop.counter }}">
                     <p>{{ message }}</p>
+                    <a class="btn-close" onclick="(function() {document.getElementById('message_{{ forloop.counter }}').style.display = 'none';})()"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_SM"> <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg></a>
                 </div>
             {% endfor %}
         </div>
-        <script>
-            setTimeout(() => {
-                document.getElementById('id_alert_messages').style.display = 'none';
-                console.log("try");              
-            }, "3000")
-        </script>
     {% endif %}
+
     <script>
+        function check_dates() {
+            min_date = document.querySelector('#id_min_date')
+            max_date = document.querySelector('#id_max_date')
+            try {
+                max_date.min = min_date.value
+            } catch (error) {}
+            try {
+                min_date.max = max_date.value
+            } catch (error) {}
+        }
+        function active_inputs(select_input) {
+            min_date = document.querySelector('#id_min_date')
+            max_date = document.querySelector('#id_max_date')
+            technician_input = document.querySelector('#id_select_technician')
+            if (select_input.value == 'status_completed' || select_input.value == 'status_assigned' || select_input.value == 'status_closed' ) {
+                min_date.disabled = false
+                max_date.disabled = false
+                technician_input.disabled = false
+                document.querySelectorAll('.filter-assigned-customer').forEach((element) => {
+                    element.classList.remove('filter-disabled')
+                })
+            } else {
+                min_date.disabled = true
+                max_date.disabled = true
+                technician_input.disabled = true
+                
+                document.querySelectorAll('.filter-assigned-customer').forEach((element) => {
+                    element.classList.add('filter-disabled')
+                })
+
+            }
+        }
+        check_dates()
+        active_inputs(document.querySelector('#id_status_search'))
+    </script>
+    
+    <!--<script>
         function check_dates() {
             min_date = document.querySelector('#id_min_date')
             max_date = document.querySelector('#id_max_date')
@@ -183,7 +216,8 @@
                 technician_input.value = ""
             }
         }
+
         check_dates()
         active_inputs(document.querySelector('#id_status_search'))
-    </script>
+    </script>-->
 {% endblock content %}

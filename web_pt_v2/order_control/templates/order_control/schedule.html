@@ -1,0 +1,89 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Agenda{% endblock title %}
+
+{% block content %}
+    <main>
+        <div class="page-schedule">
+            <h1>Agenda</h1>
+            {% for technician in technicians %}
+                <div class="technician">
+                    <h2>{{ technician.user.first_name }} {{ technician.user.last_name }}</h2>
+                    <hr>
+                    <div class="dates">
+                        {% if technician.orders.all|not_completed|get_undefined %}
+                            <div class="orders-date">
+                                <p class="date date-undefined">Sin hora definida</p>
+                                <div class="orders">
+                                    {% for order in technician.orders.all|not_completed|get_undefined %}
+                                        <a class="order" href="{% url 'order-update' order.pk %}">
+                                            <div class="order-hour">
+                                                <p>{% if order.date_assigned %}{{ order.date_assigned|date:"H:i" }}{% else %}--:--{% endif  %}</p>
+                                            </div>
+                                            <div class="order-content">
+                                                <p class="order-id">{{ order.customer.contract_number }} | {{ order.customer.customer_name }}</p>
+                                                <p class="order-address">{{ order.customer.address }}</p>
+                                                <p>{{ order.customer.phone_1 }}</p>
+                                                <p>{{ order.customer.get_category_display }} | {% if order.customer.comment %}{{ order.customer.comment }}{% else %}Sin observaciones.{% endif %}</p>
+                                            </div>
+                                        </a>  
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% for date in technician.orders.all|not_completed|get_dates %}
+                            <div class="orders-date">
+                                <p class="date">{{ date|date:"d/m/Y" }}</p>
+                                <div class="orders">
+                                    {% for order in technician.orders.all|not_completed|get_orders:date %}
+                                        <a class="order" href="{% url 'order-update' order.pk %}">
+                                            <div class="order-hour">
+                                                <p>{% if order.date_assigned %}{{ order.date_assigned|date:"H:i" }}{% else %}--:--{% endif  %}</p>
+                                            </div>
+                                            <div class="order-content">
+                                                <p class="order-id">{{ order.customer.contract_number }} | {{ order.customer.customer_name }}</p>
+                                                <p class="order-address">{{ order.customer.address }}</p>
+                                                <p>{{ order.customer.phone_1 }}</p>
+                                                <p>{{ order.customer.get_category_display }} | {% if order.customer.comment %}{{ order.customer.comment }}{% else %}Sin observaciones.{% endif %}</p>
+                                            </div>
+                                        </a>  
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if not technician.orders.all|not_completed %}
+                            <div>
+                                <p class="date without-orders">Sin asignaciones</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </main>
+
+    <!-- {% if messages %}
+        <div id="id_alert_messages">
+            {% for message in messages %}
+                <div class="message">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById('id_alert_messages').style.display = 'none';
+            }, "3000")
+        </script>
+    {% endif %}
+    
+    <script>
+        function set_message(textarea) {
+            textarea.value = ""
+        }
+    </script> -->
+
+{% endblock content %}
