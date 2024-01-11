@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
-from django.db.models.signals import post_save,  pre_save
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
 class Technician(models.Model):
@@ -78,14 +78,18 @@ class Customer(models.Model):
         return 'C{} - {}'.format(self.contract_number, self.customer_name)
 
 
-
-
 class Order(models.Model):
+    CUSTOMER_CONFIRMATION_CHOICES = [
+        (0, 'Sin confirmar'),
+        (1, 'En espera'),
+        (2, 'Confirmada'),
+    ]
     customer = models.ForeignKey(Customer, verbose_name=_("Cliente"), on_delete=models.CASCADE, related_name="orders", related_query_name='order')
     technician = models.ForeignKey(Technician, verbose_name=_("Técnico"), on_delete=models.CASCADE, blank=True, null=True, related_name="orders", related_query_name='order')
     completed = models.BooleanField(_("Completada"), default=False)
     extra_order_comment = models.CharField(_("Información extra"), max_length=200, blank=True, null=True)
     closed = models.BooleanField(_("Orden Cerrada"), default=False)
+    customer_confirmation = models.IntegerField(_("Confirmación Cliente"), choices=CUSTOMER_CONFIRMATION_CHOICES, default=0)
     date_assigned = models.DateTimeField(_("Fecha a realizar"), blank=True, null=True)
     date_created = models.DateTimeField(_("Fecha De Creación"), auto_now=False, auto_now_add=True)
     date_updated = models.DateTimeField(_("Última Modificación"), auto_now=True, auto_now_add=False)
@@ -131,13 +135,3 @@ def customer_post_save_receiver(sender, instance, **kwargs):
 @receiver(post_save, sender=Order)
 def order_post_save_receiver(sender, instance, **kwargs):
     if kwargs['created']: Installation.objects.create(order=instance)
-
-
-"""@receiver(post_save, sender=Order)
-def order_post_save_receiver(sender, instance, **kwargs):
-    if kwargs['created']:
-        orders = Order.objects.filter(customer=instance.customer).exclude(id=instance.id)
-        for order in orders:
-            order.closed = True
-            order.save()
-"""

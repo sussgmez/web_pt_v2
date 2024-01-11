@@ -110,20 +110,29 @@ input[type=number] {
 #id_page_header #id_header_navbar .navbar-option:hover {
   color: #528FF8;
 }
+#id_page_header #id_header_navbar hr {
+  display: none;
+}
 @media (max-width: 588px) {
   #id_page_header #id_header_navbar {
     width: 100%;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
   #id_page_header #id_header_navbar .navbar-option {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem;
     border-radius: 0.25rem;
   }
   #id_page_header #id_header_navbar .navbar-option:hover {
     color: #F5F9FF;
     background-color: rgba(245, 249, 255, 0.2);
+  }
+  #id_page_header #id_header_navbar hr {
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(245, 249, 255, 0.2);
   }
 }
 @media (max-width: 588px) {
@@ -802,12 +811,31 @@ main .header-main h1 {
   max-width: 868px;
   margin: auto;
 }
-.page-schedule h1 {
-  margin-bottom: 2rem;
+.page-schedule .header-page {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.page-schedule .header-page h1 {
+  width: fit-content;
 }
 @media (max-width: 588px) {
-  .page-schedule h1 {
+  .page-schedule .header-page h1 {
     font-size: 1.5rem;
+  }
+}
+.page-schedule .header-page .btn {
+  display: block;
+  width: fit-content;
+  padding: 0.65rem 1rem;
+  font-size: 0.7rem;
+}
+@media (max-width: 588px) {
+  .page-schedule .header-page {
+    align-items: start;
+    flex-direction: column;
   }
 }
 .page-schedule .technician {
@@ -908,6 +936,145 @@ main .header-main h1 {
 }
 @media (max-width: 588px) {
   .page-schedule {
+    padding: 2rem 0.5rem;
+  }
+}
+
+.page-pre-schedule {
+  padding: 2rem;
+  max-width: 868px;
+  margin: auto;
+}
+.page-pre-schedule .header-page {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.page-pre-schedule .header-page h1 {
+  width: fit-content;
+}
+@media (max-width: 588px) {
+  .page-pre-schedule .header-page h1 {
+    font-size: 1.5rem;
+  }
+}
+.page-pre-schedule .header-page .btn {
+  display: block;
+  width: fit-content;
+  padding: 0.65rem 2rem;
+  font-size: 0.7rem;
+}
+@media (max-width: 588px) {
+  .page-pre-schedule .header-page {
+    align-items: start;
+    flex-direction: column;
+  }
+  .page-pre-schedule .header-page .btn {
+    width: 100%;
+  }
+}
+.page-pre-schedule .order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.page-pre-schedule .order-list .order {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  justify-content: space-between;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+.page-pre-schedule .order-list .order .customer-info {
+  width: 100%;
+  font-size: 0.8rem;
+}
+.page-pre-schedule .order-list .order .customer-info p {
+  margin-bottom: 0.25rem;
+}
+.page-pre-schedule .order-list .order .customer-info .customer-id {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.page-pre-schedule .order-list .order .customer-info .customer-id:hover {
+  text-decoration: underline;
+}
+.page-pre-schedule .order-list .order .customer-info .customer-address {
+  height: 1.9rem;
+  overflow: hidden;
+  font-weight: 500;
+}
+.page-pre-schedule .order-list .order .customer-info .customer-comment {
+  height: 1rem;
+  overflow: hidden;
+}
+.page-pre-schedule .order-list .order .customer-info .label {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.page-pre-schedule .order-list .order .order-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20rem;
+}
+.page-pre-schedule .order-list .order .order-info select, .page-pre-schedule .order-list .order .order-info input {
+  border: none;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 0.25rem;
+}
+.page-pre-schedule .order-list .order .order-info #id_customer_confirmation[data-chosen="0"] {
+  background-color: rgba(226, 75, 75, 0.2);
+}
+.page-pre-schedule .order-list .order .order-info #id_customer_confirmation[data-chosen="1"] {
+  background-color: rgba(243, 173, 43, 0.2);
+}
+.page-pre-schedule .order-list .order .order-info #id_customer_confirmation[data-chosen="2"] {
+  background-color: rgba(22, 150, 104, 0.2);
+}
+.page-pre-schedule .order-list .order .order-info #id_customer_confirmation option {
+  background-color: #FFF;
+}
+.page-pre-schedule .order-list .order .order-info label {
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.page-pre-schedule .order-list .order:hover {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 4px #dadada;
+}
+@media (max-width: 588px) {
+  .page-pre-schedule .order-list .order {
+    flex-direction: column;
+  }
+  .page-pre-schedule .order-list .order .customer-info .customer-address {
+    height: 2.85rem;
+  }
+  .page-pre-schedule .order-list .order .customer-info .customer-comment {
+    height: 1.9rem;
+  }
+  .page-pre-schedule .order-list .order .order-info {
+    width: 100%;
+    gap: 0.25rem;
+  }
+}
+.page-pre-schedule .order-list hr {
+  border: none;
+  border-bottom: 2px solid #001736;
+  padding: 0;
+  margin: 0.5rem 0.25rem;
+}
+@media (max-width: 588px) {
+  .page-pre-schedule {
     padding: 2rem 0.5rem;
   }
 }

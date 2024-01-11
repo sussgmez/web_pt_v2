@@ -1,5 +1,5 @@
 from django import template
-from datetime import datetime, timezone
+from datetime import timezone
 
 register = template.Library()
 
@@ -50,3 +50,16 @@ def short_address(value):
     return value[:100] + '...'
 
 
+@register.filter
+def get_order_form(list, technician=None):
+    final_list = []
+
+    if technician==None: final_list = [f for f in list if f.instance.technician == None]
+    else:
+        for form in list:
+            try:
+                if (form.instance.technician.pk == technician):
+                    final_list.append(form)
+            except: pass
+
+    return final_list

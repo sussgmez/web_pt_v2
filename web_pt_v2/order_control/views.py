@@ -1,15 +1,14 @@
-from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 import pandas, math
 from io import BytesIO
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import ListView, UpdateView, CreateView, TemplateView
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from .models import Customer, Order, Installation, Technician
-from .forms import CustomerUpdateForm, OrderUpdateForm, InstallationUpdateForm, CustomerForm
+from .forms import CustomerUpdateForm, OrderUpdateForm, InstallationUpdateForm, CustomerForm, OrderScheduleForm
 
 
 class CustomerListView(ListView):
@@ -232,6 +231,52 @@ class Schedule(TemplateView):
         return context
     
 
+class PreScheduleView(TemplateView):
+    template_name = "order_control/pre_schedule.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        customers = Customer.objects.filter(order=None)
+        for customer in customers:
+            Order.objects.create(customer_id=customer.contract_number)
+        orders = Order.objects.filter(completed=False).filter(closed=False).order_by('technician')
+
+        context["technicians"] = Technician.objects.all()
+
+        context['form_list'] = []
+
+        for order in orders:
+            context['form_list'].append(OrderScheduleForm(instance=order))
+
+        return context
+    
+    def post(self, *args, **kwargs):
+        id_list = self.request.POST.getlist('id')
+        technician_list = self.request.POST.getlist('technician')
+        date_assigned_list = self.request.POST.getlist('date_assigned')
+        customer_confirmation_list = self.request.POST.getlist('customer_confirmation')
+
+        for i in range(0, len(id_list)):
+            order = Order.objects.get(id=id_list[i])
+
+            try: order.technician = Technician.objects.get(id=technician_list[i])
+            except: order.technician = None
+
+            order.customer_confirmation = customer_confirmation_list[i]
+
+            if date_assigned_list[i] == "": order.date_assigned = None
+            else: 
+                
+                order.date_assigned = date_assigned_list[i]
+
+            order.save()
+        
+        messages.success(self.request, 'Cambios guardados con éxito.')
+
+        return redirect('pre-schedule')
+
+
 def order_complete(request, pk):
     order = Order.objects.get(pk=pk)
     order.completed = True
@@ -273,8 +318,6 @@ def export_customers(request):
                 last_order = customer.orders.all().order_by('-date_created')[0]
                 if last_order.technician.code != technician or (last_order.closed and not request.user.is_superuser): 
                     customers = customers.exclude(contract_number=customer.contract_number)
-                
-
             except: customers = customers.exclude(contract_number=customer.contract_number)
 
     if min_date_get != "" or max_date_get != "":
@@ -330,7 +373,7 @@ def export_customers(request):
                 if last_order.closed!=True:
                     customers = customers.exclude(contract_number=customer.contract_number)
             except: customers = customers.exclude(contract_number=customer.contract_number)
-  
+
     df = pandas.DataFrame()
 
     for customer in customers:
@@ -382,19 +425,22 @@ def export_customers(request):
 
         df_aux = pandas.DataFrame([[
             day_name,
+            1,
             date,
             customer.contract_number, 
             customer.customer_name, 
+            customer.address[:50],
             ext_drop,
-            drop_used,
             hook_used,
+            drop_used,
             drop_serial,
             onu_serial,
             router_serial,
             technician]])  
-            
+
         df = pandas.concat([df, df_aux])
 
+    df = df.rename(columns={0:'DIA', 1:'ITEM', 2:'FECHA', 3:'CONTRATO', 4:'NOMBRE CLIENTE', 5:'DIRECCION', 6:'+ DE 250M', 7:'TENSORES', 8:'MTS DROP', 9:'SN. DROP', 10:'SERIAL ONU', 11:'SERIAL ROUTER', 12:'TÉCNICO'})
 
     with BytesIO() as b:
         with pandas.ExcelWriter(b) as writer:
@@ -409,7 +455,7 @@ def export_customers(request):
 
 @permission_required('order_control.add_order', raise_exception=True)
 def order_create(request, pk):
-    order = Order.objects.create(customer=Customer.objects.get(pk=pk))
+    Order.objects.create(customer=Customer.objects.get(pk=pk))
     return redirect('customer-update', pk=pk)
 
 @permission_required('order_control.delete_order', raise_exception=True)

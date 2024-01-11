@@ -110,18 +110,27 @@ input[type=number] {appearance: textfield;}
                 color: $secondary-color;
             }
         }
+        hr {
+            display: none;
+        }
         @media (max-width: $sm_screen) {
             width: 100%;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.5rem;
             .navbar-option {
                 width: 100%;
-                padding: 0.5rem;
+                padding: 0.5rem 0.5rem;
                 border-radius: 0.25rem;
                 &:hover {
                     color: $tertiary-color;
                     background-color: rgba($tertiary-color, $alpha: 0.2);
                 }
+            }
+            hr {
+                display: block;
+                width: 100%;
+                border: none;
+                border-bottom: 1px solid rgba($tertiary-color, $alpha: 0.2);
             }
         }
     }
@@ -779,10 +788,28 @@ main {
     padding: 2rem;
     max-width: $md_screen;
     margin: auto;
-    h1 {
-        margin-bottom: 2rem;
+    
+    .header-page {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        justify-content: space-between;
+        gap: 1rem;
+        h1 {
+            width: fit-content;
+            @media (max-width: $sm_screen) {
+                font-size: 1.5rem;
+            }
+        }
+        .btn {
+            display: block;
+            width: fit-content;
+            padding: 0.65rem 1rem;
+            font-size: 0.7rem;
+        }
         @media (max-width: $sm_screen) {
-            font-size: 1.5rem;
+            align-items: start;
+            flex-direction: column;
         }
     }
     .technician {
@@ -881,38 +908,143 @@ main {
         &:last-of-type {
             margin: 0;
         }
+    }
 
-        // display: grid;
-        // grid-template-columns: 1fr 1fr;
-        // padding: 0.75rem;
-        // gap: 0.25rem;
-        // background-color: $white;
-        // border: 1px solid $light-border;
-        // border-radius: 0.25rem;
-        // margin: 0.5rem;
-        // hr {
-        //     margin: 0.25rem -0.5rem;
-        //     border: none;
-        //     border-bottom: 1px solid $light-border;
-        // }
-        // .order-id {
-        //     font-weight: 700;
-        //     font-size: 0.9rem;
-        // }
-        // .label {
-        //     font-weight: 700;
-        //     font-size: 0.75rem;
-        // }
-        // .order-data {
-        //     font-size: 0.85rem;
-        // }
-        // .colspan-2 {
-        //     grid-column: span 2;
-        // }
-        // &:hover {
-        //     border: 1px solid $dark-border;
-        //     box-shadow: 0px 0px 4px $light-border;
-        // }
+    @media (max-width: $sm_screen) {
+        padding: 2rem 0.5rem;
+    }
+}
+
+.page-pre-schedule {
+    padding: 2rem;
+    max-width: $md_screen;
+    margin: auto;
+
+    .header-page {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        justify-content: space-between;
+        gap: 1rem;
+        h1 {
+            width: fit-content;
+            @media (max-width: $sm_screen) {
+                font-size: 1.5rem;
+            }
+        }
+        .btn {
+            display: block;
+            width: fit-content;
+            padding: 0.65rem 2rem;
+            font-size: 0.7rem;
+        }
+        @media (max-width: $sm_screen) {
+            align-items: start;
+            flex-direction: column;
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+
+    .order-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        .order {
+            width: 100%;
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            justify-content: space-between;
+            border: 1px solid rgba($black, $alpha: 0.1);
+            border-radius: 0.5rem;
+            .customer-info {
+                width: 100%;
+                font-size: 0.8rem;
+                p {
+                    margin-bottom: 0.25rem;
+                }
+                .customer-id {
+                    display: block;
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+                .customer-address {
+                    height: 1.9rem;
+                    overflow: hidden;
+                    font-weight: 500;
+                }
+                .customer-comment {
+                    height: 1rem;
+                    overflow: hidden;
+                }
+                .label {
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                }
+            }
+            .order-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 20rem;
+                select, input {
+                    border: none;
+                    width: 100%;
+                    padding: 0.5rem;
+                    font-size: 0.72rem;
+                    font-weight: 600;
+                    background-color: rgba($black, $alpha: 0.03);
+                    border-radius: 0.25rem;
+                }
+                #id_customer_confirmation[data-chosen='0'] {
+                    background-color: rgba($danger-color, $alpha: 0.2);
+                }
+                #id_customer_confirmation[data-chosen='1'] {
+                    background-color: rgba($warning-color, $alpha: 0.2);
+                }
+                #id_customer_confirmation[data-chosen='2'] {
+                    background-color: rgba($success-color, $alpha: 0.2);
+                }
+                #id_customer_confirmation option {
+                    background-color: $white;
+                }
+                label {
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                }
+            }
+            &:hover {
+                border: 1px solid rgba($black, $alpha: 0.2);
+                
+                box-shadow: 0px 0px 4px $light-border;
+            }
+            @media (max-width: $sm_screen) {
+                flex-direction: column;
+                .customer-info {
+                    .customer-address {
+                        height: 2.85rem;
+                    }
+                    .customer-comment {
+                        height: 1.9rem;
+                    }
+                }
+                .order-info {
+                    width: 100%;
+                    gap: 0.25rem;
+                }
+            }
+        }
+        hr {
+            border: none;
+            border-bottom: 2px solid $primary-color;
+            padding: 0;
+            margin: 0.5rem 0.25rem;
+        }
     }
 
     @media (max-width: $sm_screen) {

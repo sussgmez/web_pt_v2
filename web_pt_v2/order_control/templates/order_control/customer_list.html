@@ -187,37 +187,5 @@
         check_dates()
         active_inputs(document.querySelector('#id_status_search'))
     </script>
-    
-    <!--<script>
-        function check_dates() {
-            min_date = document.querySelector('#id_min_date')
-            max_date = document.querySelector('#id_max_date')
-            try {
-                max_date.min = min_date.value
-            } catch (error) {}
-            try {
-                min_date.max = max_date.value
-            } catch (error) {}
-        }
-        function active_inputs(select_input) {
-            min_date = document.querySelector('#id_min_date')
-            max_date = document.querySelector('#id_max_date')
-            technician_input = document.querySelector('#id_select_technician')
-            if (select_input.value == 'status_completed' || select_input.value == 'status_assigned' || select_input.value == 'status_closed' ) {
-                min_date.disabled = false
-                max_date.disabled = false
-                technician_input.disabled = false
-            } else {
-                min_date.disabled = true
-                max_date.disabled = true
-                technician_input.disabled = true
-                min_date.value = ""
-                max_date.value = ""
-                technician_input.value = ""
-            }
-        }
 
-        check_dates()
-        active_inputs(document.querySelector('#id_status_search'))
-    </script>-->
 {% endblock content %}

@@ -1,0 +1,86 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Agenda{% endblock title %}
+
+{% block content %}
+    {% if not user.is_superuser %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
+    {% endif %}  
+
+    <main>
+        <div class="page-pre-schedule">
+            <div class="header-page">
+                <h1>Asignar Órdenes</h1>
+                <button class="btn btn-info" onclick="submit_form('id_form_orders_assign', '¿Guardar cambios?')">Guardar</button>
+            </div>
+            <form method="post" class="order-list" id="id_form_orders_assign">
+                {% csrf_token %}
+                {% for technician in technicians %}
+                    {% for order_form in form_list|get_order_form:technician.pk %}
+                        <div class="order">
+                            <div class="customer-info">
+                                <a href="{% url 'customer-update' order_form.instance.customer.contract_number %}" class="customer-id">OR-{{ order_form.instance.pk }}: {{ order_form.instance.customer.contract_number }} | {{ order_form.instance.customer.customer_name }}</a>
+                                <p class="customer-address">{{ order_form.instance.customer.address }}</p>
+                                <p><span class="label">Teléfono: </span>{{ order_form.instance.customer.phone_1 }} / {% if order_form.instance.customer.phone_2 %}{{ order_form.instance.customer.phone_2 }}{% else %}-{% endif %}</p>
+                                <p class="customer-comment"><span class="label">Observaciones: </span>{% if order_form.instance.customer.comment %}{{ order_form.instance.customer.comment }}{% else %}-{% endif %}</p>
+                                <p><span class="label">Fecha Recibido: </span>{% if order_form.instance.customer.date_assigned %}{{ order_form.instance.customer.date_assigned|date:"d/m/Y" }}{% else %}No definida{% endif %}</p>
+                            </div>
+                            <div class="order-info">
+                                <input type="hidden" name="id" value="{{ order_form.instance.pk }}">  
+                                {{ order_form.technician }}
+                                {{ order_form.date_assigned }}
+                                {{ order_form.customer_confirmation }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if form_list|get_order_form:technician.pk %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+                {% for order_form in form_list|get_order_form %}
+                        <div class="order">
+                            <div class="customer-info">
+                                <a href="{% url 'customer-update' order_form.instance.customer.contract_number %}" class="customer-id">{{ order_form.instance.customer.contract_number }} | {{ order_form.instance.customer.customer_name }}</a>
+                                <p class="customer-address">{{ order_form.instance.customer.address }}</p>
+                                <p><span class="label">Teléfono: </span>{{ order_form.instance.customer.phone_1 }} / {% if order_form.instance.customer.phone_2 %}{{ order_form.instance.customer.phone_2 }}{% else %}-{% endif %}</p>
+                                <p class="customer-comment"><span class="label">Observaciones: </span>{% if order_form.instance.customer.comment %}{{ order_form.instance.customer.comment }}{% else %}-{% endif %}</p>
+                                <p><span class="label">Fecha Recibido: </span>{% if order_form.instance.customer.date_assigned %}{{ order_form.instance.customer.date_assigned|date:"d/m/Y" }}{% else %}------{% endif %}</p>
+                            </div>
+                            <div class="order-info">
+                                <input type="hidden" name="id" value="{{ order_form.instance.pk }}">  
+                                {{ order_form.technician }}
+                                {{ order_form.date_assigned }}
+                                {{ order_form.customer_confirmation }}
+                            </div>
+                        </div>
+                    {% endfor %}
+            </form>
+        </div>
+    </main>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+        <div id="id_alert_messages">
+            {% for message in messages %}
+                <div class="message" id="message_{{ forloop.counter }}">
+                    <p>{{ message }}</p>
+                    <a class="btn-close" onclick="(function() {document.getElementById('message_{{ forloop.counter }}').style.display = 'none';})()"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_SM"> <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg></a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <script>
+        function check_color_all() {
+            inputs = document.querySelectorAll('.input-customer-confirm');
+            inputs.forEach(element => {
+                element.dataset.chosen = element.value; 
+            });
+        }
+        check_color_all()
+    </script>
+
+{% endblock content %}
