@@ -1079,6 +1079,151 @@ main .header-main h1 {
   }
 }
 
+.page-preconfig {
+  padding: 2rem;
+  max-width: 868px;
+  margin: auto;
+}
+.page-preconfig .header-page {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.page-preconfig .header-page h1 {
+  width: fit-content;
+}
+@media (max-width: 588px) {
+  .page-preconfig .header-page h1 {
+    font-size: 1.5rem;
+  }
+}
+.page-preconfig .header-page .btn {
+  display: block;
+  width: fit-content;
+  padding: 0.65rem 2rem;
+  font-size: 0.7rem;
+}
+@media (max-width: 588px) {
+  .page-preconfig .header-page {
+    align-items: start;
+    flex-direction: column;
+  }
+  .page-preconfig .header-page .btn {
+    width: 100%;
+  }
+}
+.page-preconfig .installation-list .date {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: rgba(0, 23, 54, 0.1);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+.page-preconfig .installation-list hr {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.page-preconfig .installation-list .installation {
+  width: 100%;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.page-preconfig .installation-list .installation .customer-info {
+  width: 70%;
+  background-color: rgba(0, 0, 0, 0.04);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+.page-preconfig .installation-list .installation .installation-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30%;
+  gap: 0.25rem;
+}
+.page-preconfig .installation-list .installation .installation-info div {
+  display: flex;
+  gap: 0.25rem;
+}
+.page-preconfig .installation-list .installation .customer-id {
+  display: block;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.page-preconfig .installation-list .installation .customer-id:hover {
+  text-decoration: underline;
+}
+.page-preconfig .installation-list .installation .customer-address {
+  font-weight: 500;
+  font-size: 0.75rem;
+  max-height: 1.72rem;
+  overflow: hidden;
+}
+.page-preconfig .installation-list .installation .label {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.page-preconfig .installation-list .installation input {
+  width: 100%;
+  padding: 0.45rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.page-preconfig .installation-list .installation #id_zone {
+  width: 4rem;
+}
+.page-preconfig .installation-list .preconfig-message {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  resize: none;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.3rem;
+  margin-bottom: 1rem;
+}
+.page-preconfig .installation-list .preconfig-message::-webkit-scrollbar {
+  width: 0;
+}
+@media (max-width: 868px) {
+  .page-preconfig .installation-list .customer-info {
+    width: 65% !important;
+  }
+  .page-preconfig .installation-list .installation-info {
+    width: 35% !important;
+  }
+}
+@media (max-width: 588px) {
+  .page-preconfig .installation-list .installation {
+    flex-direction: column;
+  }
+  .page-preconfig .installation-list .customer-info {
+    width: 100% !important;
+  }
+  .page-preconfig .installation-list .installation-info {
+    width: 100% !important;
+  }
+}
+@media (max-width: 588px) {
+  .page-preconfig {
+    padding: 2rem 0.5rem;
+  }
+}
+
 .page-section .section {
   padding: 3rem 0;
 }

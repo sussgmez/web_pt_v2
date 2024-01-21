@@ -28,9 +28,20 @@ def get_dates(list):
     dates = []
     for element in list:
         try:
-            if element.date_assigned.date() not in dates:
-                date = element.date_assigned.replace(tzinfo=timezone.utc).astimezone(tz=None)
-                dates.append(date.date())
+            date = element.date_assigned.replace(tzinfo=timezone.utc).astimezone(tz=None).date() 
+            if date not in dates:
+                dates.append(date)
+        except: pass
+    return dates
+
+@register.filter
+def get_dates_preconfig(list):
+    dates = []
+    for element in list:
+        try:
+            date = element.instance.order.date_assigned.replace(tzinfo=timezone.utc).astimezone(tz=None).date() 
+            if date not in dates:
+                dates.append(date)
         except: pass
     return dates
 
@@ -38,6 +49,16 @@ def get_dates(list):
 def get_orders(value, date):
     value = value.filter(date_assigned__year=date.year, date_assigned__month=date.month, date_assigned__day=date.day)
     return value
+
+@register.filter
+def filter_date(list, date):
+    aux_list = []
+    for installation_form in list:
+        order_date = installation_form.instance.order.date_assigned.replace(tzinfo=timezone.utc).astimezone(tz=None).date() 
+        if order_date.day == date.day and order_date.month == date.month and order_date.year == date.year:
+            aux_list.append(installation_form)
+    return aux_list
+
 
 @register.filter
 def get_undefined(value):

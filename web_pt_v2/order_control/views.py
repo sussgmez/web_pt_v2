@@ -8,7 +8,7 @@ from django.views.generic import ListView, UpdateView, CreateView, TemplateView
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from .models import Customer, Order, Installation, Technician
-from .forms import CustomerUpdateForm, OrderUpdateForm, InstallationUpdateForm, CustomerForm, OrderScheduleForm
+from .forms import CustomerUpdateForm, OrderUpdateForm, InstallationUpdateForm, CustomerForm, OrderScheduleForm, InstallationPreconfigForm
 
 
 class CustomerListView(ListView):
@@ -213,21 +213,17 @@ class TechnicianListView(ListView):
     model = Technician
     template_name = "order_control/technician_list.html"
 
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return super().get_queryset()   
-        return Technician.objects.filter(pk=self.request.user.technician.id)
-
-
 class Schedule(TemplateView):
     template_name = "order_control/schedule.html"
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         if self.request.user.is_superuser:
             context["technicians"] = Technician.objects.all()
         else: 
             context["technicians"] = Technician.objects.filter(pk=self.request.user.technician.id)
+        
         return context
     
 
@@ -275,6 +271,37 @@ class PreScheduleView(TemplateView):
         messages.success(self.request, 'Cambios guardados con éxito.')
 
         return redirect('pre-schedule')
+
+
+class Preconfig(TemplateView):
+    template_name = "order_control/preconfig.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        installations = Installation.objects.filter(order__completed=False).filter(order__closed=False).exclude(order__date_assigned=None).order_by('order__date_assigned')
+        
+        context['form_list'] = []
+        for installation in installations:
+            context['form_list'].append(InstallationPreconfigForm(instance=installation))
+
+        return context
+    
+    def post(self, *args, **kwargs):
+        id_list = self.request.POST.getlist('id')
+        zone_list = self.request.POST.getlist('zone')
+        onu_serial_list = self.request.POST.getlist('onu_serial')
+
+        for i in range(0, len(id_list)):
+            installation = Installation.objects.get(id=id_list[i])
+            if zone_list[i] != "":
+                installation.zone = zone_list[i]
+            installation.onu_serial = onu_serial_list[i]
+            installation.save()
+        
+        messages.success(self.request, 'Cambios guardados con éxito.')
+
+        return redirect('preconfig')
 
 
 def order_complete(request, pk):

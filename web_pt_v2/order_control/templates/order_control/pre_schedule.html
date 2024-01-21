@@ -42,7 +42,7 @@
                 {% for order_form in form_list|get_order_form %}
                         <div class="order">
                             <div class="customer-info">
-                                <a href="{% url 'customer-update' order_form.instance.customer.contract_number %}" class="customer-id">{{ order_form.instance.customer.contract_number }} | {{ order_form.instance.customer.customer_name }}</a>
+                                <a href="{% url 'customer-update' order_form.instance.customer.contract_number %}" class="customer-id">OR-{{ order_form.instance.pk }}: {{ order_form.instance.customer.contract_number }} | {{ order_form.instance.customer.customer_name }}</a>
                                 <p class="customer-address">{{ order_form.instance.customer.address }}</p>
                                 <p><span class="label">Teléfono: </span>{{ order_form.instance.customer.phone_1 }} / {% if order_form.instance.customer.phone_2 %}{{ order_form.instance.customer.phone_2 }}{% else %}-{% endif %}</p>
                                 <p class="customer-comment"><span class="label">Observaciones: </span>{% if order_form.instance.customer.comment %}{{ order_form.instance.customer.comment }}{% else %}-{% endif %}</p>

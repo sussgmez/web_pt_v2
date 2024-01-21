@@ -30,6 +30,7 @@
             <nav id="id_header_navbar">
                 <a class="navbar-option" href="{% url 'customer-list' %}">Clientes</a>
                 <a class="navbar-option" href="{% url 'schedule' %}">Agenda</a>
+                <a class="navbar-option" href="{% url 'technicians' %}">Técnicos</a>
                 <hr>
                 <a class="navbar-option" href="{% url 'logout' %}">Cerrar Sesión</a>
             </nav>
@@ -66,9 +67,10 @@
             });
         }
         function get_message() {
-                message = `*Validar potencia | {{ order.customer.get_category_display }}*\n*Nro. De Contrato:* C{{order.customer.contract_number}}\n*Nombre:* {{order.customer.customer_name}}\n*Dirección:* {{order.customer.address|short_address}}\n*Plan:* {{order.customer.get_plan_display}}\n*Z${document.querySelector('#id_zone').value}.OLT${document.querySelector('#id_olt').value}.T${document.querySelector('#id_card').value}.PON${document.querySelector('#id_pon').value}.C${document.querySelector('#id_box').value}.PUERTO${document.querySelector('#id_port').value}*\n*PC:* ${document.querySelector('#id_box_power').value}dBm\n*PR:* ${document.querySelector('#id_house_power').value}dBm\n*Serial ONU:* ${document.querySelector('#id_onu_serial').value}\n*DROP:* ${document.querySelector('#id_drop_serial').value}/${document.querySelector('#id_drop_used').value}m\n*Tensores:* ${document.querySelector('#id_hook_used').value}\n*Conectores:* ${document.querySelector('#id_fast_conn_used').value}`
-                document.querySelector('#id_installation_message').value = message
-            }
+            message = `*Validar potencia | {{ order.customer.get_category_display }}*\n*Nro. De Contrato:* C{{order.customer.contract_number}}\n*Nombre:* {{order.customer.customer_name}}\n*Dirección:* {{order.customer.address|short_address}}\n*Plan:* {{order.customer.get_plan_display}}\n*Z${document.querySelector('#id_zone').value}.OLT${document.querySelector('#id_olt').value}.T${document.querySelector('#id_card').value}.PON${document.querySelector('#id_pon').value}.C${document.querySelector('#id_box').value}.PUERTO${document.querySelector('#id_port').value}*\n*PC:* ${document.querySelector('#id_box_power').value}dBm\n*PR:* ${document.querySelector('#id_house_power').value}dBm\n*Serial ONU:* ${document.querySelector('#id_onu_serial').value}\n*DROP:* ${document.querySelector('#id_drop_serial').value}/${document.querySelector('#id_drop_used').value}m\n*Tensores:* ${document.querySelector('#id_hook_used').value}\n*Conectores:* ${document.querySelector('#id_fast_conn_used').value}`
+            document.querySelector('#id_installation_message').value = message
+        }
+        
     </script>
 </body>
 </html>

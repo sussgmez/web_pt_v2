@@ -1,0 +1,61 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% load order_control_extras %}
+{% block title %}Agenda{% endblock title %}
+
+{% block content %}
+    {% if not user.is_superuser %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
+    {% endif %}  
+
+    <main>
+        <div class="page-preconfig">
+            <div class="header-page">
+                <h1>Preactivaciones</h1>
+                <button class="btn btn-info" onclick="submit_form('id_form_preconfig', '¿Guardar cambios?')">Guardar</button>
+            </div>
+            <form method="post" id="id_form_preconfig" class="installation-list">
+                {% csrf_token %}
+                {% for date in form_list|get_dates_preconfig %}
+                    <p class="date">{{ date|date:"d/m/Y" }}</p>
+                    {% for installation_form in form_list|filter_date:date %}
+                        <div class="installation">
+                            {% with customer=installation_form.instance.order.customer %}
+                            <div class="customer-info">
+                                <a class="customer-id" href="{% url 'order-update' installation_form.instance.order.pk %}">OR-{{ installation_form.instance.order.pk }}: {{ customer.pk }} | {{ customer.customer_name }}</a>
+                                <p class="customer-address">{{ customer.address }}</p>
+                            </div>
+                            <div class="installation-info">
+                                <input type="hidden" name="id" value="{{ installation_form.instance.pk }}">  
+                                <div>
+                                    <input type="text" disabled value="{{ customer.get_plan_display }}">
+                                    {{ installation_form.zone }}
+                                </div>
+                                {{ installation_form.onu_serial }}
+                            </div>
+                            {% endwith %}
+                        </div>
+                        {% if not forloop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                    <textarea class="preconfig-message" readonly rows="{{ form_list|filter_date:date|length|add:1 }}">Preactivaciones {{ date|date:"d/m/Y" }}&#13;&#10;{% for installation_form in form_list|filter_date:date %}{% with installation=installation_form.instance %}{{ installation.order.customer.contract_number }}, Zona {% if installation.zone %}{{ installation.zone }}{% else %}n/a{% endif %}, {{ installation.order.customer.get_plan_display }}, {% if installation.onu_serial %}{{ installation.onu_serial }}{% else %}n/a{% endif %}{% endwith %}{% if not forloop.last %}&#13;&#10;{% endif %}{% endfor %}</textarea>
+                {% endfor %}
+            </form>
+        </div>
+    </main>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+        <div id="id_alert_messages">
+            {% for message in messages %}
+                <div class="message" id="message_{{ forloop.counter }}">
+                    <p>{{ message }}</p>
+                    <a class="btn-close" onclick="(function() {document.getElementById('message_{{ forloop.counter }}').style.display = 'none';})()"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_SM"> <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg></a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock content %}

@@ -39,7 +39,6 @@ class InstallationUpdateForm(forms.ModelForm):
         fields = ["zone", "olt", "pon", "card", "box", "port", "box_power", "house_power", "onu_serial", "router_serial", "drop_serial", "drop_used", "hook_used", "fast_conn_used", "extra_comment"]
 
 class OrderScheduleForm(forms.ModelForm):
-
     class Meta:
         model = Order
         fields = ['technician', 'date_assigned', 'customer_confirmation']
@@ -47,4 +46,14 @@ class OrderScheduleForm(forms.ModelForm):
             'date_assigned':forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type':'datetime-local'}),
             'customer_confirmation':forms.Select(attrs={'onchange':' this.dataset.chosen = this.value; ', 'class':'input-customer-confirm'}),
         }
+
+class InstallationPreconfigForm(forms.ModelForm):
+    class Meta:
+        model = Installation
+        fields = ['zone', 'onu_serial']
+        widgets = {
+            'zone':forms.NumberInput(attrs={'placeholder':'Zona'}),
+            'onu_serial':forms.TextInput(attrs={'placeholder':'Serial ONU'})
+        }
+
 

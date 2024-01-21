@@ -2,103 +2,17 @@
 
 {% load static %}
 {% load order_control_extras %}
-{% block title %}Clientes{% endblock title %}
+{% block title %}Técnicos{% endblock title %}
 
 {% block content %}
+    {% if not user.is_superuser %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
+    {% endif %}
     <main>
-        <div class="header-main">
-            <h1>Técnicos</h1>
-        </div>
-        <div class="page-section">
-            <section class="section">
-                <div class="technician-list">
-                    {% for technician in technician_list %}
-                    <h2 class="technician-name">{{ technician.user.first_name }} {{ technician.user.last_name }}</h2>
-                    <div class="technician-content">
-                        <div class="technician-orders">
-                            {% for order in technician.orders.all|not_completed %}
-                                {% with prev_order=technician.orders.all|not_completed|previous:forloop.counter0 %}
-                                    {% if order.date_assigned|date:"d,m,Y" != prev_order.date_assigned|date:"d,m,Y" %}
-                                        <p class="orders-date">{{ order.date_assigned|date:"d/m/Y" }}</p>
-                                    {% endif %}
-                                {% endwith %}
-                                <a class="order" href="{% url 'order-update' order.pk %}">
-                                    <p class="order-header">OR-{{ order.pk }} | C{{ order.customer.contract_number }}</p>
-                                    <hr>
-                                    <div class="columns-2">
-                                        <p class="label">Nombre</p>
-                                        <p class="order-text nowrap">{{ order.customer.customer_name }}</p>
-                                    </div>
-                                    <div class="columns-2">
-                                        <p class="label">Dirección</p>
-                                        <p class="order-text">{{ order.customer.address }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="label">Nro. De Teléfono</p>
-                                        <p class="order-text nowrap">{{ order.customer.phone_1 }}</p>
-                                    </div>
-                                    <div>
-                                        <p class="label">Categoría</p>
-                                        <p class="order-text nowrap">{{ order.customer.get_category_display }}</p>
-                                    </div>
-                                    <div class="columns-2">
-                                        <p class="label">Observación</p>
-                                        <p class="order-text">{% if order.customer.comment %}{{ order.customer.comment }}{% else %}---- ----{% endif %}</p>
-                                    </div>
-                                    <hr>
-                                    <div class="columns-2">
-                                        <p class="label">Fecha Asignada</p>
-                                        <p class="order-text nowrap">{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y h:i a" }}{% else %}---- ----{% endif  %}</p>
-                                    </div>
-                                </a>
-                            {% empty %}
-                                <p class="p-technician-without-orders nowrap">Técnico no posee instalaciones por realizar</p>
-                            {% endfor %}
-                        </div>
-                        <div class="orders-message">
-                            {% for order in technician.orders.all|not_completed %}
-                                <div class="order-message">
-                                    <p>
-                                        <span class="order-message-contract-number">C{{ order.customer.contract_number }}</span> | {{ order.customer.get_category_display }}<br><b>{{ order.customer.customer_name }}</b><br>
-                                    </p>
-                                    <p class="order-message-address">
-                                        {{ order.customer.address|short_address }}
-                                    </p>
-                                    <p>
-                                        <b>{{ order.customer.phone_1 }}</b>{% if order.customer.comment %}<br><span class="order-message-comment">{{ order.customer.comment }}</span>{% endif %}<br>{% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y h:i a" }}{% else %}Sin fecha ni hora definida{% endif %}
-                                    </p>
-                                </div>
-                                <hr>
-                            {% empty %}
-                                <p class="message-without-orders">Sin asignaciones</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-        </div>
-    </main>
-
-    {% if messages %}
-        <div id="id_alert_messages">
-            {% for message in messages %}
-                <div class="message">
-                    <p>{{ message }}</p>
-                </div>
+        <div class="page-technicians">
+            {% for technician in technician_list %}
+                
             {% endfor %}
         </div>
-        <script>
-            setTimeout(() => {
-                document.getElementById('id_alert_messages').style.display = 'none';
-            }, "3000")
-        </script>
-    {% endif %}
-    
-    <script>
-        function set_message(textarea) {
-            textarea.value = ""
-        }
-    </script>
-
+    </main>
 {% endblock content %}

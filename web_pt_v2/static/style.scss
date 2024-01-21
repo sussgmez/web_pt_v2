@@ -1052,6 +1052,148 @@ main {
     }
 }
 
+.page-preconfig {
+    padding: 2rem;
+    max-width: $md_screen;
+    margin: auto;
+    .header-page {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        justify-content: space-between;
+        gap: 1rem;
+        h1 {
+            width: fit-content;
+            @media (max-width: $sm_screen) {
+                font-size: 1.5rem;
+            }
+        }
+        .btn {
+            display: block;
+            width: fit-content;
+            padding: 0.65rem 2rem;
+            font-size: 0.7rem;
+        }
+        @media (max-width: $sm_screen) {
+            align-items: start;
+            flex-direction: column;
+            .btn {
+                width: 100%;
+            }
+        }
+    }
+    .installation-list {
+        .date {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            background-color: rgba($primary-color, $alpha: 0.1);
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        hr {
+            border: none;
+            border-bottom: 1px solid rgba($black, $alpha: 0.3);
+        }
+        .installation {
+            width: 100%;
+            display: flex;
+            gap: 0.25rem;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            .customer-info {
+                width: 70%;
+                background-color: rgba($black, $alpha: 0.04);
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+            }
+            .installation-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 30%;
+                gap: 0.25rem;
+                div {
+                    display: flex;
+                    gap: 0.25rem;
+                }
+            }
+            .customer-id {
+                display: block;
+                font-weight: 700;
+                font-size: 0.8rem;
+                margin-bottom: 0.25rem;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            .customer-address {
+                font-weight: 500;
+                font-size: 0.75rem;
+                max-height: 1.72rem;
+                overflow: hidden;
+            }
+            .label {
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+            input {
+                width: 100%;
+                padding: 0.45rem;
+                border: 1px solid rgba($black, $alpha: 0.1);
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+            #id_zone {
+                width: 4rem;
+            }
+        }
+        .preconfig-message {
+            width: 100%;
+            border: 1px solid rgba($black, $alpha: 0.2);
+            resize: none;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 0.25rem;
+            color: rgba($black, $alpha: 0.7);
+            line-height: 1.3rem;
+            margin-bottom: 1rem;
+            &::-webkit-scrollbar {
+                width: 0;
+            }
+        }
+        @media (max-width: $md_screen) {
+            .customer-info {
+                width: 65% !important;
+            }
+            .installation-info {
+                width: 35% !important;
+            }
+        }
+        @media (max-width: $sm_screen) {
+            .installation {
+                flex-direction: column;
+            }
+            .customer-info {
+                width: 100% !important;
+            }
+            .installation-info {
+                width: 100% !important;
+            }
+        }
+    }
+    
+    @media (max-width: $sm_screen) {
+        padding: 2rem 0.5rem;
+    }
+}
+
 .page-section {
     .section {
         padding: 3rem 0;
