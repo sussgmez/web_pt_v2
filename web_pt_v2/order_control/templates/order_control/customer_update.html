@@ -17,145 +17,89 @@
     <main>
         <div class="page-customer">
             <div class="customer">
-                <h2>Cliente: {{ customer.contract_number  }}</h2>
-                <form method="post" class="customer-form" id="id_form_customer_update">
+                <h1>Cliente: <span class="contract-number">{{ form.instance.pk }}</span></h1>
+                <form class="customer-form" method="post" id="id_form_customer_update">
                     {% if user.is_superuser %}
                         {% csrf_token %}
                     {% endif %}
-                    <div class="div-input">
-                        <label for="id_contract_number">{{ form.contract_number.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_contract_number">Nro. De Contrato*</label>
                         {{ form.contract_number }}
                     </div>
-                    <div class="colspan-2 div-input">
-                        <label for="id_customer_name">{{ form.customer_name.label }}*</label>
-                        {{ form.customer_name }}
-                        {% if form.contract_number.errors %}
-                            {% for error in form.customer_name.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="colspan-2 div-input">
-                        <label for="id_address">{{ form.address.label }}*</label>
-                        {{ form.address }}
-                        {% if form.address.errors %}
-                            {% for error in form.address.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="div-input">
-                        <label for="id_plan">{{ form.plan.label }}</label>
-                        {{ form.plan }}
-                        {% if form.plan.errors %}
-                            {% for error in form.plan.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="div-input">
-                        <label for="id_customer_type">{{ form.customer_type.label }}</label>
-                        {{ form.customer_type }}
-                        {% if form.customer_type.errors %}
-                            {% for error in form.customer_type.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>  
-                    <div class="div-input">
-                        <label for="id_phone_1">{{ form.phone_1.label }}*</label>
-                        {{ form.phone_1 }}
-                        {% if form.phone_1.errors %}
-                            {% for error in form.phone_1.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="div-input">
-                        <label for="id_phone_2">{{ form.phone_2.label }}</label>
-                        {{ form.phone_2 }}
-                        {% if form.phone_2.errors %}
-                            {% for error in form.phone_2.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="div-input">
-                        <label for="id_email">{{ form.email.label }}</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
-                            {% for error in form.email.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="div-input">
-                        <label for="id_category">{{ form.category.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_category">Categoría</label>
                         {{ form.category }}
-                        {% if form.category.errors %}
-                            {% for error in form.category.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
-                    <div class="div-input">
-                        <label for="id_assigned_to">{{ form.assigned_to.label }}</label>
+                    <div class="data-input colspan-2 {% if form.customer_name.errors %}data-input-error{% endif %}">
+                        <label class="label" for="id_customer_name">Nombre Del Cliente* <span class="text-alert"> - Campo Obligatorio</span></label>
+                        {{ form.customer_name }}
+                    </div>
+                    <div class="data-input colspan-2 {% if form.address.errors %}data-input-error{% endif %}">
+                        <label class="label" for="id_address">Dirección* <span class="text-alert"> - Campo Obligatorio</span></label>
+                        {{ form.address }}
+                    </div>
+                    <div class="data-input {% if form.phone_1.errors %}data-input-error{% endif %}">
+                        <label class="label" for="id_phone_1">Teléfono 1* <span class="text-alert"> - Campo Obligatorio</span></label>
+                        {{ form.phone_1 }}
+                    </div>
+                    <div class="data-input">
+                        <label class="label" for="id_phone_2">Teléfono 2</label>
+                        {{ form.phone_2 }}
+                    </div>
+                    <div class="data-input">
+                        <label class="label" for="id_plan">Plan</label>
+                        {{ form.plan }}
+                    </div>
+                    <div class="data-input">
+                        <label class="label" for="id_customer_type">Tipo De Cliente</label>
+                        {{ form.customer_type }}
+                    </div>
+                    <div class="data-input">
+                        <label class="label" for="id_email">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="data-input">
+                        <label class="label" for="id_assigned_to">Asignado a</label>
                         {{ form.assigned_to }}
-                        {% if form.assigned_to.errors %}
-                            {% for error in form.assigned_to.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
-                    <div class="div-input">
-                        <label for="id_seller">{{ form.seller.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_seller">Vendedor</label>
                         {{ form.seller }}
-                        {% if form.seller.errors %}
-                            {% for error in form.seller.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
-                    <div class="div-input">
-                        <label for="id_date_assigned">{{ form.date_assigned.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_date_assigned">Fecha Asignada</label>
                         {{ form.date_assigned }}
-                        {% if form.date_assigned.errors %}
-                            {% for error in form.date_assigned.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
-                    <div class="colspan-2 div-input">
-                        <label for="id_comment">{{ form.comment.label }}</label>
+                    <div class="data-input colspan-2">
+                        <label class="label" for="id_comment">Observaciones</label>
                         {{ form.comment }}
-                        {% if form.comment.errors %}
-                            {% for error in form.comment.errors %}
-                                <p class="text-input-error">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
                 </form>
                 {% if user.is_superuser %}
+                <div class="btns">
                     <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_customer_update', '¿Está seguro que desea realizar estos cambios?')">Editar</button>
-                    <button type="submit" class="btn btn-danger" onclick="submit_button(`{% url 'customer-delete' customer.pk %}`, '¿Está seguro de eliminar este cliente?')" >Eliminar Cliente</button>
+                    <button type="submit" class="btn btn-danger" onclick="submit_button(`{% url 'customer-delete' customer.pk %}`, '¿Está seguro de eliminar este cliente?')" >Eliminar</button>
+                </div>
                 {% endif %}    
             </div>
             <div class="orders">
-                <h2>Órdenes</h2>
-                {% if user.is_superuser %}
-                    {% with order=customer.orders|last_order %}
-                        <a class="btn btn-info" {% if not order or order.closed %}href="{% url 'order-create' customer.pk %}"{% endif %}>Crear Orden</a>
-                    {% endwith %}
-                {% endif %}
-                <div class="orders-scroll">
+                <div class="orders-header">
+                    <h2>Órdenes</h2>
+                    {% if user.is_superuser %}
+                        {% with order=customer.orders|last_order %}
+                            <a class="btn btn-info" {% if not order or order.closed %}href="{% url 'order-create' customer.pk %}"{% endif %}>Crear Orden</a>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+                <div class="order-list">
                     {% for order in customer.orders.all|order_by_date_created %}
                         <a class="order" href="{% url 'order-update' order.pk %}">
-                            <p>OR-{{ order.pk }}: {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
+                            <p class="order-id">OR-{{ order.pk }}: {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
                             <div class="order-extra">
                                 {% if order.extra_order_comment %}
                                     <p>{{ order.extra_order_comment }}</p>
                                 {% elif order.technician %}
-                                    <p>{{ order.technician }} | {% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y" }}{% endif %}</p>
+                                    <p>{{ order.technician }} - {% if order.date_assigned %}{{ order.date_assigned|date:"d/m/Y" }}{% endif %}</p>
                                 {% else %}
                                     --- ---
                                 {% endif %}

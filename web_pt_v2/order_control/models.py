@@ -87,6 +87,7 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, verbose_name=_("Cliente"), on_delete=models.CASCADE, related_name="orders", related_query_name='order')
     technician = models.ForeignKey(Technician, verbose_name=_("Técnico"), on_delete=models.CASCADE, blank=True, null=True, related_name="orders", related_query_name='order')
     completed = models.BooleanField(_("Completada"), default=False)
+    activated = models.BooleanField(_("Servicio Activo"), default=False)
     extra_order_comment = models.CharField(_("Información extra"), max_length=200, blank=True, null=True)
     closed = models.BooleanField(_("Orden Cerrada"), default=False)
     customer_confirmation = models.IntegerField(_("Confirmación Cliente"), choices=CUSTOMER_CONFIRMATION_CHOICES, default=0)

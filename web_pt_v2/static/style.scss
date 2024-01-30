@@ -286,15 +286,20 @@ main {
             .select-sort-by {
                 border: 1px solid $dark-border;
                 height: auto;
+                @media (max-width: $sm_screen) {
+                    width: 100%;
+                }
             }
             .btn {
                 font-size: 0.7rem;
                 height: auto;
-                display: flex;
-                align-items: center;
                 padding: 0.65rem 2rem ;
             }
-
+            @media (max-width: $sm_screen) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                .select-sort-by {grid-column: span 2;}
+            }
         }
         @media (max-width: $md_screen) {
             grid-template-columns: repeat(2, 1fr);
@@ -327,6 +332,9 @@ main {
             width: fit-content;
             padding: 0.5rem 2rem;
             font-size: 0.7rem;
+            @media (max-width: $sm_screen) {
+                width: 100%;
+            }
         }
     }
     .customer-list {
@@ -341,7 +349,7 @@ main {
             cursor: pointer;
             border: 1px solid $light-border;
             border-radius: 0.5rem;
-            padding: 1.25rem;
+            padding: 1rem;
             font-size: 0.9rem;
             font-weight: 500;
             .colspan-1 {
@@ -392,7 +400,7 @@ main {
                 background-color: rgba($info-color, $alpha: 0.1);
             }
             hr {
-                margin: 0.5rem -1.25rem;
+                margin: 0.25rem -1rem;
                 border: none;
                 border-bottom: 1px solid $light-border;
             }
@@ -443,183 +451,194 @@ main {
 }
 
 .page-customer {
-    padding: 2rem;
+    padding: 2rem 8rem;
     max-width: $md_screen;
     margin: auto;
-
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-
-    h2 {
-        margin-bottom: 0.75rem;
-    }
     .customer {
-        padding: 2rem 1.5rem;
-        border: 1px solid $dark-border;
-        box-shadow: 0px 0px 4px $light-border;
+        border: 1px solid rgba($black, $alpha: 0.08);
+        box-shadow: 0 0 0.25rem rgba($black, $alpha: 0.1);
         border-radius: 0.5rem;
-        width: 66%;
-        hr {
-            margin: 1rem -1.5rem;
-        }
-        .btn {
-            padding: 0.5rem 2rem;
-            font-size: 0.75rem;
-        }
-        @media (max-width: $md_screen) {
-            .btn {
-                width: 100%;
-                margin-bottom: 0.25rem;
-            }
+        padding: 2rem;
+        margin-bottom: 1rem;
+    }
+    h1 {
+        margin-bottom: 1rem;
+        .contract-number {
+            font-weight: 400;
         }
         @media (max-width: $sm_screen) {
-            padding: 1rem;
+            font-size: 1.5rem;
         }
     }
     .customer-form {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
-        margin-bottom: 1.5rem;
-        label {
-            font-weight: 700;
-            font-size: 0.8rem;
-        }
-        select, input, textarea {
-            width: 100%;
-            border: 1px solid $light-border;
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-            resize: none;
-            box-shadow: inset 0 0 2px $light-border;
-            border-radius: 0.25rem;
-            &:hover {
-                border: 1px solid $primary-color;
-            }
-        }
-        textarea {
-            height: 3rem;
-        }
-        .text-input-error {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: $danger-color;
-        }
-        .div-input {
+        margin-bottom: 1rem;
+        .data-input {
             display: flex;
             flex-direction: column;
+            .text-alert {
+                display: none;
+            }
+        }
+        .data-input-error {
+            .text-alert {
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: $danger-color;
+                display: inline-block;
+            }
+            input, select, textarea {
+                border: 1px solid $danger-color;
+            }
+        }
+
+        .label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 0 0 0.25rem 0.25rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba($black, $alpha: 0.1);
+            border-radius: 0.25rem;
+            resize: none;
+            box-shadow: inset 0 0 0.1rem rgba($black, $alpha: 0.1);
+            &:hover {
+                box-shadow: inset 0 0 0.1rem rgba($black, $alpha: 0.3);
+                border: 1px solid rgba($black, $alpha: 0.2);
+            }
         }
         .colspan-2 {
             grid-column: span 2;
         }
-        @media (max-width: $sm_screen) {
-            grid-template-columns: 1fr;
-            .colspan-2 {
-                grid-column: span 1;
-            }
+    }
+    .btns {
+        width: fit-content;
+        margin-left: auto;
+        .btn {
+            padding: 0.5rem 3rem;
         }
     }
     .orders {
-        width: 33%;
-        border: 1px solid $primary-color;
-        box-shadow: 0px 0px 4px $light-border;
+        border: 1px solid rgba($black, $alpha: 0.12);
+        box-shadow: 0 0 0.25rem rgba($black, $alpha: 0.1);
         border-radius: 0.5rem;
-        height: fit-content;
-        padding: 1.5rem 1rem;
-        h2 {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
+        padding: 2rem;
+    }
+    .orders-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
         .btn {
-            display: block;
-            width: 100%;
-            font-size: 0.75rem;
-            padding: 0.5rem 1.25rem;
+            padding: 0.5rem 2rem;
         }
-        .orders-scroll {
-            max-height: 500px;
-            overflow: overlay;
-            &::-webkit-scrollbar {
-                width: 0;
-            }
-        }
+    }
+    .order-list {
+        display: flex;
+        flex-direction: column;
+        max-height: 200px;
+        overflow-y: overlay;
+        border-radius: 0.25rem;
+        border: 1px solid rgba($black, $alpha: 0.1);
+        min-height: 2rem;
         .order {
             display: block;
-            border: 1px solid $light-border;
-            border-radius: 0.25rem;
-            margin: 0.5rem 0;
             padding: 0.5rem;
-            font-weight: 700;
-            font-size: 0.8rem;
-            .order-extra {
-                font-weight: 500;
-                margin-top: 0.25rem;
-            }
-            .order-assigned {
-                color: $warning-color;
-            }
-            .order-completed {
-                color: $success-color;
-            }
-            .order-to-assign {
-                color: $info-color;
-            }
-            .order-closed {
-                color: $danger-color;
-            }
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba($black, $alpha: 0.05);
+            background-color: $white;
             &:hover {
-                border: 1px solid $dark-border;
-                box-shadow: inset 0 0 2px $dark-border;
+                background-color: rgba($black, $alpha: 0.03);
             }
+            &:last-of-type {
+                border: none;
+            }
+        }
+        .order-id {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .order-completed {
+            color: $success-color;
+        }
+        .order-closed {
+            color: $danger-color;
+        }
+        .order-to-assign {
+            color: $info-color;
+        }
+        .order-assigned {
+            color: $warning-color;
         }
     }
     @media (max-width: $md_screen) {
-        flex-direction: column;
-        align-items: center;
+        padding: 2rem 1rem;
         .customer, .orders {
-            width: 100%;
+            max-width: 39rem;
+            margin: 0 auto 1rem auto;
         }
     }
     @media (max-width: $sm_screen) {
         padding: 2rem 0.5rem;
+        .customer, .orders {
+            padding: 1rem 0.75rem;
+        }
+        .customer-form {
+            grid-template-columns: 1fr;
+            .colspan-2 {grid-column: span 1 ;}
+        }
+        .btns {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            width: 100%;
+        }
+        .orders-header {
+            flex-direction: column;
+            align-items: start;
+            gap: 0.5rem;
+            h2 {
+                @media (max-width: $sm_screen) {
+                    font-size: 1.25rem;
+                }
+            }
+            .btn {
+                display: block;
+                width: 100%;
+            }
+        }
     }
-}
+}  
 
 .page-order {
-    padding: 2rem;
+    padding: 2rem 1rem;
     max-width: $md_screen;
     margin: auto;
-
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-
-    width: fit-content;
-
     .order {
-        padding: 2rem 1.5rem;
-        border: 1px solid $dark-border;
-        box-shadow: 0px 0px 4px $light-border;
+        border: 1px solid rgba($black, $alpha: 0.08);
+        box-shadow: 0 0 0.25rem rgba($black, $alpha: 0.1);
         border-radius: 0.5rem;
-        width: 64%;
-        height: fit-content;
-        h3 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-        h4 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            margin-bottom: 0.75rem;
+        padding: 2rem;
+        margin: auto;
+        margin-bottom: 1rem;
+        max-width: 600px;
+        h1 {
+            .contract-number {
+                font-weight: 400;
+            }
+            @media (max-width: $sm_screen) {
+                font-size: 1.5rem;
+            }
         }
         hr {
-            margin: 1.15rem -1.5rem;
+            margin: 1.15rem -2rem;
             border: none;
-            border-bottom: 1px solid $dark-border;
+            border-bottom: 1px solid rgba($black, $alpha: 0.08);
         }
         .order-label {
             font-weight: 500;
@@ -641,82 +660,68 @@ main {
         .order-customer-form, .order-form {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
+            gap: 1rem;
             margin-bottom: 0.5rem;
-            .div-input {
+            .data-input {
                 display: flex;
                 flex-direction: column;
             }
-            label {
-                font-weight: 700;
-                font-size: 0.8rem;
+
+            .label {
+                font-weight: 600;
+                font-size: 0.85rem;
+                margin: 0 0 0.25rem 0.25rem;
             }
-            select, input, textarea {
+            input, select, textarea {
                 width: 100%;
-                border: 1px solid $light-border;
-                border-radius: 0.25rem;
                 padding: 0.5rem;
-                font-size: 0.8rem;
-                font-weight: 500;
+                font-size: 0.85rem;
+                border: 1px solid rgba($black, $alpha: 0.1);
+                border-radius: 0.25rem;
                 resize: none;
-                height: 100%;
-            }
-            textarea {
-                height: 3rem;
+                box-shadow: inset 0 0 0.1rem rgba($black, $alpha: 0.1);
             }
             .colspan-2 {
                 grid-column: span 2;
             }
-            @media (max-width: $sm_screen) {
-                grid-template-columns: 1fr;
-                .colspan-2 {
-                    grid-column: span 1;
-                }
-                textarea {
-                    height: 5rem;
-                }
-            }
         }
         .order-btns {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem 0.25rem;
-            margin-top: 1rem;
-            .btn {
-                width: fit-content;
-            }
+            align-items: center;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            gap: 1px;
         }
         .btn {
+            width: 100%;
+            border-radius: 0;
+            padding: 0.5rem 0;
             font-size: 0.75rem;
-            padding: 0.5rem 1rem;
-            width: fit-content;
-        }
-        @media (max-width: $md_screen) {
-            .btn {
-                width: 100% !important;
-            }
         }
     }
     .installation {
-        border: 1px solid $primary-color;
-        box-shadow: 0px 0px 4px $light-border;
+        border: 1px solid rgba($black, $alpha: 0.12);
+        box-shadow: 0 0 0.25rem rgba($black, $alpha: 0.1);
         border-radius: 0.5rem;
+        padding: 2rem;
         height: fit-content;
-        padding: 1.5rem 1rem;
-        width: 36%;
+        margin: auto;
+        margin-bottom: 1rem;
+        max-width: 600px;
         h2 {
             font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
         .order-installation-form {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-            label {
-                font-weight: 700;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            .label {
+                font-weight: 600;
                 font-size: 0.8rem;
+                margin: 0 0 0.25rem 0.25rem;
             }
             select, input, textarea {
                 width: 100%;
@@ -731,56 +736,72 @@ main {
                 display: grid;
                 grid-template-columns: repeat(6, 1fr);
                 gap: 0.25rem;
-                label {
-                    display: block;
-                    text-align: center;
-                }
+                grid-column: span 6;
             }
             .colspan-2 {
                 grid-column: span 2;
             }
-        }
-        .btn {
-            font-size: 0.75rem;
-            padding: 0.5rem 1rem;
-            width: 100%;
-        }
-        #id_installation_message {
-            resize: none;
-            width: 100%;
-            padding: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-            border-radius: 0.25rem;
-            border: 1px solid $light-border;
-            height: 10rem;
-            &::-webkit-scrollbar {
-                width: 0;
+            .colspan-3 {
+                grid-column: span 3;
             }
         }
-    }
-    @media (max-width: $md_screen) {
-        flex-direction: column;
-        .order {
-            width: 100%;
-            max-width: 505px;
-            align-self: center;
-            .order-customer-form, .order-form {
-                grid-template-columns: 1fr;
-                .colspan-2 {
-                    grid-column: span 1;
+        .installation-btns {
+            display: flex;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            gap: 1px;
+            .btn {
+                border-radius: 0;
+                font-size: 0.75rem;
+                padding: 0.5rem 0;
+                width: 100%;
+                &:last-of-type {
+                    margin: 0;
                 }
             }
         }
-        .installation {
-            width: 100%;
-            max-width: 505px;
-            align-self: center;
+        #id_installation_message {
+            display: none;
+            // resize: none;
+            // width: 100%;
+            // padding: 0.25rem;
+            // font-size: 0.75rem;
+            // font-weight: 600;
+            // margin-top: 0.5rem;
+            // border-radius: 0.25rem;
+            // border: 1px solid $light-border;
+            // height: 10rem;
+            // &::-webkit-scrollbar {
+            //     width: 0;
+            // }
         }
     }
     @media (max-width: $sm_screen) {
         padding: 2rem 0.5rem;
+        .order {
+            padding: 1rem 0.75rem;
+            .order-customer-form, .order-form {
+                grid-template-columns: 1fr;
+                .colspan-2 {grid-column: span 1 ;}
+            }
+            .order-btns {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+        .installation {
+            padding: 1rem 0.75rem;
+            .order-installation-form {
+                grid-template-columns: 1fr 1fr;
+                .colspan-2 {grid-column: span 1 ;}
+                .colspan-3 {grid-column: span 2 ;}
+                .inputs-box {grid-column:  span 2;}
+            }
+            .installation-btns {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
     }
 }
 
@@ -909,24 +930,37 @@ main {
             margin: 0;
         }
     }
-
+    .order-activated {
+        background-color: rgba($success-color, $alpha: 0.1);
+        &:hover {
+            background-color: rgba($success-color, $alpha: 0.05);
+        }
+    }
     @media (max-width: $sm_screen) {
         padding: 2rem 0.5rem;
     }
 }
 
 .page-pre-schedule {
-    padding: 2rem;
-    max-width: $md_screen;
-    margin: auto;
 
     .header-page {
+        position: sticky;
+        top: 0;
+        background-color: $white;
+        padding: 1rem 0.5rem;
+        border-bottom: 1px solid rgba($black, $alpha: 0.1);
+        margin-bottom: 1rem;
+    }
+
+    .header-content {
+        max-width: $md_screen;
         display: flex;
+        margin: auto;
         align-items: center;
-        margin-bottom: 2rem;
         justify-content: space-between;
         gap: 1rem;
         h1 {
+            font-size: 1.5rem;
             width: fit-content;
             @media (max-width: $sm_screen) {
                 font-size: 1.5rem;
@@ -939,7 +973,6 @@ main {
             font-size: 0.7rem;
         }
         @media (max-width: $sm_screen) {
-            align-items: start;
             flex-direction: column;
             .btn {
                 width: 100%;
@@ -951,6 +984,9 @@ main {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        max-width: $md_screen;
+        margin: auto;
+        padding: 0.5rem;
         .order {
             width: 100%;
             display: flex;
@@ -1045,10 +1081,6 @@ main {
             padding: 0;
             margin: 0.5rem 0.25rem;
         }
-    }
-
-    @media (max-width: $sm_screen) {
-        padding: 2rem 0.5rem;
     }
 }
 

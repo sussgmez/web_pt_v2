@@ -50,6 +50,7 @@ class CustomerListView(ListView):
 
         customers = Customer.objects.filter(pk__contains=s_text) | Customer.objects.filter(address__contains=s_text) | Customer.objects.filter(customer_name__contains=s_text)
 
+
         if technician != "":
             for customer in customers:
                 try: 
@@ -114,6 +115,16 @@ class CustomerListView(ListView):
                         customers = customers.exclude(contract_number=customer.contract_number)
                 except: customers = customers.exclude(contract_number=customer.contract_number)
 
+        elif status == 'status_activated':
+            for customer in customers:
+                try: 
+                    last_order = customer.orders.all().order_by('-date_created')[0]
+                    if last_order.activated!=True:
+                        customers = customers.exclude(contract_number=customer.contract_number)
+                except: 
+                    customers = customers.exclude(contract_number=customer.contract_number)
+
+
         return customers.order_by(sort_by)
 
     def get_context_data(self, **kwargs):
@@ -138,6 +149,7 @@ class CustomerListView(ListView):
             elif status == 'status_assigned': context['status_opt_3'] = 'selected'
             elif status == 'status_to_assign': context['status_opt_4'] = 'selected'
             elif status == 'status_closed': context['status_opt_5'] = 'selected'
+            elif status == 'status_activated': context['status_opt_6'] = 'selected'
         except: pass
 
         context["sort_by"] = '-date_created'
@@ -212,6 +224,7 @@ class InstallationUpdateView(UpdateView):
 class TechnicianListView(ListView):
     model = Technician
     template_name = "order_control/technician_list.html"
+
 
 class Schedule(TemplateView):
     template_name = "order_control/schedule.html"
@@ -307,6 +320,13 @@ class Preconfig(TemplateView):
 def order_complete(request, pk):
     order = Order.objects.get(pk=pk)
     order.completed = True
+    order.activated = True
+    order.save()
+    return redirect('order-update', pk=order.pk)
+
+def order_activated(request, pk):
+    order = Order.objects.get(pk=pk)
+    order.activated = True
     order.save()
     return redirect('order-update', pk=order.pk)
 
@@ -401,6 +421,15 @@ def export_customers(request):
                     customers = customers.exclude(contract_number=customer.contract_number)
             except: customers = customers.exclude(contract_number=customer.contract_number)
 
+    elif status == 'status_activated':
+        for customer in customers:
+            try: 
+                last_order = customer.orders.all().order_by('-date_created')[0]
+                if last_order.activated!=True:
+                    customers = customers.exclude(contract_number=customer.contract_number)
+            except: 
+                customers = customers.exclude(contract_number=customer.contract_number)
+
     df = pandas.DataFrame()
 
     for customer in customers:
@@ -419,10 +448,9 @@ def export_customers(request):
         ext_drop = ""
         drop_used = ""
         try: 
+            drop_used = last_order.installation.drop_used
             if last_order.installation.drop_used > 250: 
                 ext_drop = last_order.installation.drop_used
-            else: 
-                drop_used = last_order.installation.drop_used
         except: pass
 
         hook_used = ""
@@ -595,3 +623,11 @@ def load_excel(request):
     return redirect('customer-list')
 
 
+
+        # for customer in customers:
+        #     try:
+        #         last_order = customer.orders.all().order_by('-date_created')[0]
+        #         if last_order.completed:
+        #             last_order.activated = True
+        #             last_order.save()
+        #     except: pass

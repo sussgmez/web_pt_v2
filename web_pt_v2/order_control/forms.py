@@ -8,18 +8,17 @@ class CustomerUpdateForm(forms.ModelForm):
         fields = ['contract_number', 'category', 'customer_name', 'address', 'phone_1', 'phone_2', 'email', 'plan', 'customer_type', 'date_assigned', 'assigned_to', 'seller', 'comment']
         widgets = {
             "contract_number": forms.TextInput(attrs={'readonly':True}),
-            "address": forms.Textarea(attrs={'rows':'4'}),
+            "address": forms.Textarea(attrs={'rows':'3'}),
             "comment": forms.Textarea(attrs={'rows':'3'}),
             "date_assigned": forms.DateInput(format='%Y-%m-%d', attrs={'type':'date'}),
         }
-
 
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['contract_number', 'category', 'customer_name', 'address', 'phone_1', 'phone_2', 'email', 'plan', 'customer_type', 'date_assigned', 'assigned_to', 'seller', 'comment']
         widgets = {
-            "address": forms.Textarea(attrs={'rows':'4'}),
+            "address": forms.Textarea(attrs={'rows':'3'}),
             "comment": forms.Textarea(attrs={'rows':'3'}),
             "date_assigned": forms.DateInput(format='%Y-%m-%d', attrs={'type':'date'}),
         }
@@ -30,7 +29,7 @@ class OrderUpdateForm(forms.ModelForm):
         fields = ['technician', 'date_assigned', 'extra_order_comment', 'closed', 'completed']
         widgets = {
             'date_assigned':forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type':'datetime-local'}),
-            'extra_order_comment': forms.Textarea(attrs={'rows':'2'})
+            'extra_order_comment': forms.Textarea(attrs={'rows':'2', 'placeholder':'Añadir motivo'})
         }
 
 class InstallationUpdateForm(forms.ModelForm):

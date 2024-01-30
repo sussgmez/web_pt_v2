@@ -12,8 +12,10 @@
     <main>
         <div class="page-pre-schedule">
             <div class="header-page">
-                <h1>Asignar Órdenes</h1>
-                <button class="btn btn-info" onclick="submit_form('id_form_orders_assign', '¿Guardar cambios?')">Guardar</button>
+                <div class="header-content">
+                    <h1>Asignar Órdenes</h1>
+                    <button class="btn btn-info" onclick="submit_form('id_form_orders_assign', '¿Guardar cambios?')">Guardar</button>
+                </div>
             </div>
             <form method="post" class="order-list" id="id_form_orders_assign">
                 {% csrf_token %}

@@ -295,12 +295,24 @@ main .header-main h1 {
   border: 1px solid #b6b6b6;
   height: auto;
 }
+@media (max-width: 588px) {
+  .page-customers .filters-form .filter-btns .select-sort-by {
+    width: 100%;
+  }
+}
 .page-customers .filters-form .filter-btns .btn {
   font-size: 0.7rem;
   height: auto;
-  display: flex;
-  align-items: center;
   padding: 0.65rem 2rem;
+}
+@media (max-width: 588px) {
+  .page-customers .filters-form .filter-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .page-customers .filters-form .filter-btns .select-sort-by {
+    grid-column: span 2;
+  }
 }
 @media (max-width: 868px) {
   .page-customers .filters-form {
@@ -338,6 +350,11 @@ main .header-main h1 {
   padding: 0.5rem 2rem;
   font-size: 0.7rem;
 }
+@media (max-width: 588px) {
+  .page-customers .import-btns .btn {
+    width: 100%;
+  }
+}
 .page-customers .customer-list {
   margin: 1rem 0;
   display: grid;
@@ -351,7 +368,7 @@ main .header-main h1 {
   cursor: pointer;
   border: 1px solid #dadada;
   border-radius: 0.5rem;
-  padding: 1.25rem;
+  padding: 1rem;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -403,7 +420,7 @@ main .header-main h1 {
   background-color: rgba(62, 142, 255, 0.1);
 }
 .page-customers .customer-list .customer-card hr {
-  margin: 0.5rem -1.25rem;
+  margin: 0.25rem -1rem;
   border: none;
   border-bottom: 1px solid #dadada;
 }
@@ -456,188 +473,203 @@ main .header-main h1 {
 }
 
 .page-customer {
-  padding: 2rem;
+  padding: 2rem 8rem;
   max-width: 868px;
   margin: auto;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-.page-customer h2 {
-  margin-bottom: 0.75rem;
 }
 .page-customer .customer {
-  padding: 2rem 1.5rem;
-  border: 1px solid #b6b6b6;
-  box-shadow: 0px 0px 4px #dadada;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
-  width: 66%;
+  padding: 2rem;
+  margin-bottom: 1rem;
 }
-.page-customer .customer hr {
-  margin: 1rem -1.5rem;
+.page-customer h1 {
+  margin-bottom: 1rem;
 }
-.page-customer .customer .btn {
-  padding: 0.5rem 2rem;
-  font-size: 0.75rem;
-}
-@media (max-width: 868px) {
-  .page-customer .customer .btn {
-    width: 100%;
-    margin-bottom: 0.25rem;
-  }
+.page-customer h1 .contract-number {
+  font-weight: 400;
 }
 @media (max-width: 588px) {
-  .page-customer .customer {
-    padding: 1rem;
+  .page-customer h1 {
+    font-size: 1.5rem;
   }
 }
 .page-customer .customer-form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
-.page-customer .customer-form label {
-  font-weight: 700;
-  font-size: 0.8rem;
-}
-.page-customer .customer-form select, .page-customer .customer-form input, .page-customer .customer-form textarea {
-  width: 100%;
-  border: 1px solid #dadada;
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  resize: none;
-  box-shadow: inset 0 0 2px #dadada;
-  border-radius: 0.25rem;
-}
-.page-customer .customer-form select:hover, .page-customer .customer-form input:hover, .page-customer .customer-form textarea:hover {
-  border: 1px solid #001736;
-}
-.page-customer .customer-form textarea {
-  height: 3rem;
-}
-.page-customer .customer-form .text-input-error {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #e24b4b;
-}
-.page-customer .customer-form .div-input {
+.page-customer .customer-form .data-input {
   display: flex;
   flex-direction: column;
+}
+.page-customer .customer-form .data-input .text-alert {
+  display: none;
+}
+.page-customer .customer-form .data-input-error .text-alert {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #e24b4b;
+  display: inline-block;
+}
+.page-customer .customer-form .data-input-error input, .page-customer .customer-form .data-input-error select, .page-customer .customer-form .data-input-error textarea {
+  border: 1px solid #e24b4b;
+}
+.page-customer .customer-form .label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: 0 0 0.25rem 0.25rem;
+}
+.page-customer .customer-form input, .page-customer .customer-form select, .page-customer .customer-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  resize: none;
+  box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.1);
+}
+.page-customer .customer-form input:hover, .page-customer .customer-form select:hover, .page-customer .customer-form textarea:hover {
+  box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .page-customer .customer-form .colspan-2 {
   grid-column: span 2;
 }
-@media (max-width: 588px) {
-  .page-customer .customer-form {
-    grid-template-columns: 1fr;
-  }
-  .page-customer .customer-form .colspan-2 {
-    grid-column: span 1;
-  }
+.page-customer .btns {
+  width: fit-content;
+  margin-left: auto;
+}
+.page-customer .btns .btn {
+  padding: 0.5rem 3rem;
 }
 .page-customer .orders {
-  width: 33%;
-  border: 1px solid #001736;
-  box-shadow: 0px 0px 4px #dadada;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
-  height: fit-content;
-  padding: 1.5rem 1rem;
+  padding: 2rem;
 }
-.page-customer .orders h2 {
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+.page-customer .orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
-.page-customer .orders .btn {
-  display: block;
-  width: 100%;
-  font-size: 0.75rem;
-  padding: 0.5rem 1.25rem;
+.page-customer .orders-header .btn {
+  padding: 0.5rem 2rem;
 }
-.page-customer .orders .orders-scroll {
-  max-height: 500px;
-  overflow: overlay;
-}
-.page-customer .orders .orders-scroll::-webkit-scrollbar {
-  width: 0;
-}
-.page-customer .orders .order {
-  display: block;
-  border: 1px solid #dadada;
+.page-customer .order-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
+  overflow-y: overlay;
   border-radius: 0.25rem;
-  margin: 0.5rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  min-height: 2rem;
+}
+.page-customer .order-list .order {
+  display: block;
   padding: 0.5rem;
-  font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #FFF;
 }
-.page-customer .orders .order .order-extra {
-  font-weight: 500;
-  margin-top: 0.25rem;
+.page-customer .order-list .order:hover {
+  background-color: rgba(0, 0, 0, 0.03);
 }
-.page-customer .orders .order .order-assigned {
-  color: #f3ad2b;
+.page-customer .order-list .order:last-of-type {
+  border: none;
 }
-.page-customer .orders .order .order-completed {
+.page-customer .order-list .order-id {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.page-customer .order-list .order-completed {
   color: #169668;
 }
-.page-customer .orders .order .order-to-assign {
-  color: #3e8eff;
-}
-.page-customer .orders .order .order-closed {
+.page-customer .order-list .order-closed {
   color: #e24b4b;
 }
-.page-customer .orders .order:hover {
-  border: 1px solid #b6b6b6;
-  box-shadow: inset 0 0 2px #b6b6b6;
+.page-customer .order-list .order-to-assign {
+  color: #3e8eff;
+}
+.page-customer .order-list .order-assigned {
+  color: #f3ad2b;
 }
 @media (max-width: 868px) {
   .page-customer {
-    flex-direction: column;
-    align-items: center;
+    padding: 2rem 1rem;
   }
   .page-customer .customer, .page-customer .orders {
-    width: 100%;
+    max-width: 39rem;
+    margin: 0 auto 1rem auto;
   }
 }
 @media (max-width: 588px) {
   .page-customer {
     padding: 2rem 0.5rem;
   }
+  .page-customer .customer, .page-customer .orders {
+    padding: 1rem 0.75rem;
+  }
+  .page-customer .customer-form {
+    grid-template-columns: 1fr;
+  }
+  .page-customer .customer-form .colspan-2 {
+    grid-column: span 1;
+  }
+  .page-customer .btns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+  }
+  .page-customer .orders-header {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+  }
+}
+@media (max-width: 588px) and (max-width: 588px) {
+  .page-customer .orders-header h2 {
+    font-size: 1.25rem;
+  }
+}
+@media (max-width: 588px) {
+  .page-customer .orders-header .btn {
+    display: block;
+    width: 100%;
+  }
 }
 
 .page-order {
-  padding: 2rem;
+  padding: 2rem 1rem;
   max-width: 868px;
   margin: auto;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  width: fit-content;
 }
 .page-order .order {
-  padding: 2rem 1.5rem;
-  border: 1px solid #b6b6b6;
-  box-shadow: 0px 0px 4px #dadada;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
-  width: 64%;
-  height: fit-content;
+  padding: 2rem;
+  margin: auto;
+  margin-bottom: 1rem;
+  max-width: 600px;
 }
-.page-order .order h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+.page-order .order h1 .contract-number {
+  font-weight: 400;
 }
-.page-order .order h4 {
-  font-size: 0.9rem;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
+@media (max-width: 588px) {
+  .page-order .order h1 {
+    font-size: 1.5rem;
+  }
 }
 .page-order .order hr {
-  margin: 1.15rem -1.5rem;
+  margin: 1.15rem -2rem;
   border: none;
-  border-bottom: 1px solid #b6b6b6;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 .page-order .order .order-label {
   font-weight: 500;
@@ -659,85 +691,68 @@ main .header-main h1 {
 .page-order .order .order-customer-form, .page-order .order .order-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 0.5rem;
 }
-.page-order .order .order-customer-form .div-input, .page-order .order .order-form .div-input {
+.page-order .order .order-customer-form .data-input, .page-order .order .order-form .data-input {
   display: flex;
   flex-direction: column;
 }
-.page-order .order .order-customer-form label, .page-order .order .order-form label {
-  font-weight: 700;
-  font-size: 0.8rem;
+.page-order .order .order-customer-form .label, .page-order .order .order-form .label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin: 0 0 0.25rem 0.25rem;
 }
-.page-order .order .order-customer-form select, .page-order .order .order-customer-form input, .page-order .order .order-customer-form textarea, .page-order .order .order-form select, .page-order .order .order-form input, .page-order .order .order-form textarea {
+.page-order .order .order-customer-form input, .page-order .order .order-customer-form select, .page-order .order .order-customer-form textarea, .page-order .order .order-form input, .page-order .order .order-form select, .page-order .order .order-form textarea {
   width: 100%;
-  border: 1px solid #dadada;
-  border-radius: 0.25rem;
   padding: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
   resize: none;
-  height: 100%;
-}
-.page-order .order .order-customer-form textarea, .page-order .order .order-form textarea {
-  height: 3rem;
+  box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.1);
 }
 .page-order .order .order-customer-form .colspan-2, .page-order .order .order-form .colspan-2 {
   grid-column: span 2;
 }
-@media (max-width: 588px) {
-  .page-order .order .order-customer-form, .page-order .order .order-form {
-    grid-template-columns: 1fr;
-  }
-  .page-order .order .order-customer-form .colspan-2, .page-order .order .order-form .colspan-2 {
-    grid-column: span 1;
-  }
-  .page-order .order .order-customer-form textarea, .page-order .order .order-form textarea {
-    height: 5rem;
-  }
-}
 .page-order .order .order-btns {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.25rem;
-  margin-top: 1rem;
-}
-.page-order .order .order-btns .btn {
-  width: fit-content;
+  align-items: center;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  gap: 1px;
 }
 .page-order .order .btn {
+  width: 100%;
+  border-radius: 0;
+  padding: 0.5rem 0;
   font-size: 0.75rem;
-  padding: 0.5rem 1rem;
-  width: fit-content;
-}
-@media (max-width: 868px) {
-  .page-order .order .btn {
-    width: 100% !important;
-  }
 }
 .page-order .installation {
-  border: 1px solid #001736;
-  box-shadow: 0px 0px 4px #dadada;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
+  padding: 2rem;
   height: fit-content;
-  padding: 1.5rem 1rem;
-  width: 36%;
+  margin: auto;
+  margin-bottom: 1rem;
+  max-width: 600px;
 }
 .page-order .installation h2 {
   font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 .page-order .installation .order-installation-form {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
-.page-order .installation .order-installation-form label {
-  font-weight: 700;
+.page-order .installation .order-installation-form .label {
+  font-weight: 600;
   font-size: 0.8rem;
+  margin: 0 0 0.25rem 0.25rem;
 }
 .page-order .installation .order-installation-form select, .page-order .installation .order-installation-form input, .page-order .installation .order-installation-form textarea {
   width: 100%;
@@ -752,41 +767,38 @@ main .header-main h1 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0.25rem;
-}
-.page-order .installation .order-installation-form .inputs-box label {
-  display: block;
-  text-align: center;
+  grid-column: span 6;
 }
 .page-order .installation .order-installation-form .colspan-2 {
   grid-column: span 2;
 }
-.page-order .installation .btn {
+.page-order .installation .order-installation-form .colspan-3 {
+  grid-column: span 3;
+}
+.page-order .installation .installation-btns {
+  display: flex;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  gap: 1px;
+}
+.page-order .installation .installation-btns .btn {
+  border-radius: 0;
   font-size: 0.75rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0;
   width: 100%;
+}
+.page-order .installation .installation-btns .btn:last-of-type {
+  margin: 0;
 }
 .page-order .installation #id_installation_message {
-  resize: none;
-  width: 100%;
-  padding: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid #dadada;
-  height: 10rem;
+  display: none;
 }
-.page-order .installation #id_installation_message::-webkit-scrollbar {
-  width: 0;
-}
-@media (max-width: 868px) {
+@media (max-width: 588px) {
   .page-order {
-    flex-direction: column;
+    padding: 2rem 0.5rem;
   }
   .page-order .order {
-    width: 100%;
-    max-width: 505px;
-    align-self: center;
+    padding: 1rem 0.75rem;
   }
   .page-order .order .order-customer-form, .page-order .order .order-form {
     grid-template-columns: 1fr;
@@ -794,15 +806,28 @@ main .header-main h1 {
   .page-order .order .order-customer-form .colspan-2, .page-order .order .order-form .colspan-2 {
     grid-column: span 1;
   }
-  .page-order .installation {
-    width: 100%;
-    max-width: 505px;
-    align-self: center;
+  .page-order .order .order-btns {
+    flex-direction: column;
+    gap: 0.25rem;
   }
-}
-@media (max-width: 588px) {
-  .page-order {
-    padding: 2rem 0.5rem;
+  .page-order .installation {
+    padding: 1rem 0.75rem;
+  }
+  .page-order .installation .order-installation-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .page-order .installation .order-installation-form .colspan-2 {
+    grid-column: span 1;
+  }
+  .page-order .installation .order-installation-form .colspan-3 {
+    grid-column: span 2;
+  }
+  .page-order .installation .order-installation-form .inputs-box {
+    grid-column: span 2;
+  }
+  .page-order .installation .installation-btns {
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }
 
@@ -934,44 +959,54 @@ main .header-main h1 {
 .page-schedule .order:last-of-type {
   margin: 0;
 }
+.page-schedule .order-activated {
+  background-color: rgba(22, 150, 104, 0.1);
+}
+.page-schedule .order-activated:hover {
+  background-color: rgba(22, 150, 104, 0.05);
+}
 @media (max-width: 588px) {
   .page-schedule {
     padding: 2rem 0.5rem;
   }
 }
 
-.page-pre-schedule {
-  padding: 2rem;
-  max-width: 868px;
-  margin: auto;
-}
 .page-pre-schedule .header-page {
+  position: sticky;
+  top: 0;
+  background-color: #FFF;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+.page-pre-schedule .header-content {
+  max-width: 868px;
   display: flex;
+  margin: auto;
   align-items: center;
-  margin-bottom: 2rem;
   justify-content: space-between;
   gap: 1rem;
 }
-.page-pre-schedule .header-page h1 {
+.page-pre-schedule .header-content h1 {
+  font-size: 1.5rem;
   width: fit-content;
 }
 @media (max-width: 588px) {
-  .page-pre-schedule .header-page h1 {
+  .page-pre-schedule .header-content h1 {
     font-size: 1.5rem;
   }
 }
-.page-pre-schedule .header-page .btn {
+.page-pre-schedule .header-content .btn {
   display: block;
   width: fit-content;
   padding: 0.65rem 2rem;
   font-size: 0.7rem;
 }
 @media (max-width: 588px) {
-  .page-pre-schedule .header-page {
-    align-items: start;
+  .page-pre-schedule .header-content {
     flex-direction: column;
   }
-  .page-pre-schedule .header-page .btn {
+  .page-pre-schedule .header-content .btn {
     width: 100%;
   }
 }
@@ -979,6 +1014,9 @@ main .header-main h1 {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  max-width: 868px;
+  margin: auto;
+  padding: 0.5rem;
 }
 .page-pre-schedule .order-list .order {
   width: 100%;
@@ -1072,11 +1110,6 @@ main .header-main h1 {
   border-bottom: 2px solid #001736;
   padding: 0;
   margin: 0.5rem 0.25rem;
-}
-@media (max-width: 588px) {
-  .page-pre-schedule {
-    padding: 2rem 0.5rem;
-  }
 }
 
 .page-preconfig {

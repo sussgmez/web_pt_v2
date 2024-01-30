@@ -15,141 +15,146 @@
     <main>
         <div class="page-order">
             <div class="order">
-                <h2>OR-{{order.pk}}: C{{ order.customer.contract_number }}</h2>
+                <h1>OR-{{order.pk}}: <span class="contract-number">C{{ order.customer.contract_number }}</span></h1>
                 {% if order.completed %}<p class="order-label order-completed-label">Instalación finalizada</p>
                 {% elif order.closed %}<p class="order-label order-closed-label">Orden cancelada</p>
                 {% elif order.technician %}<p class="order-label order-assigned-label">Pendiente por realizar</p>
                 {% else %}<p class="order-label order-to-assign-label">Orden por asignar</p>{% endif %}</p>
                 <form class="order-customer-form" id="id_form_customer">
-                    <div class="div-input">
-                        <label for="id_customer_name">{{ customer_form.customer_name.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_customer_name">{{ customer_form.customer_name.label }}</label>
                         {{ customer_form.customer_name }}
                     </div>
-                    <div class="div-input">
-                        <label for="id_category">{{ customer_form.category.label }}</label>
-                        {{ customer_form.category }}
+                    <div class="data-input">
+                        <label class="label" for="id_phone_1">{{ customer_form.phone_1.label }}</label>
+                        <input type="text" id="id_phone_1" value="{{ customer_form.phone_1.value }}" onclick="copyToClipboard(id_phone_1)">
                     </div>
-                    <div class="div-input colspan-2">
-                        <label for="id_address">{{ customer_form.address.label }}</label>
+                    <div class="data-input colspan-2">
+                        <label class="label" for="id_address">{{ customer_form.address.label }}</label>
                         {{ customer_form.address }}
                     </div>
                 </form>
                 <div class="order-btns">
                     <a href="{% url 'customer-update' order.customer.contract_number %}" class="btn">Ver cliente</a>
                     {% if user.is_superuser %}
-                        {% if not order.completed and not order.closed %}
-                        <button onclick="submit_button(`{% url 'order-complete' order.pk %}`, '¿Finalizar orden?')" class="btn btn-success">Marcar como finalizada</button>
-                        {% endif %}
                         <button onclick="submit_button(`{% url 'order-delete' order.pk %}`, '¿Está seguro que desea eliminar esta orden?')" class="btn btn-danger">Eliminar orden</button>
+                        {% if not order.completed and not order.closed %}
+                            <button onclick="submit_button(`{% url 'order-complete' order.pk %}`, '¿Finalizar orden?')" class="btn btn-success">Finalizar</button>
+                        {% endif %}
                     {% endif %}
-                    </div>
+                </div>
                 <hr>
-                <h4>Asignación</h4>
                 <form class="order-form" id="id_form_order_update" method="post">
                     {% csrf_token %}
-                    <div class="div-input">
-                        <label for="id_technician">{{ form.technician.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_technician">{{ form.technician.label }}</label>
                         {{ form.technician }}
                     </div>
-                    <div class="div-input">
-                        <label for="id_date_assigned">{{ form.date_assigned.label }}</label>
+                    <div class="data-input">
+                        <label class="label" for="id_date_assigned">{{ form.date_assigned.label }}</label>
                         {{ form.date_assigned }}
                     </div>
                 </form>
                 {% if not order.closed and not order.completed and user.is_superuser %}
-                    <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_order_update', '¿Modificar asignación?')">Modificar asignación</button>
+                    <div class="order-btns">
+                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_order_update', '¿Modificar asignación?')">Modificar asignación</button>
+                    </div>
                 {% endif %}
                 {% if user.is_superuser %}
-                <hr>
-                <h4>Cancelar orden</h4>
-                <form class="order-form" id="form_close_order" method="post" action="">
-                    {% csrf_token %}
-                    <input type="hidden" name="closed" id="id_closed" value="true">
-                    <div class="colspan-2">
-                        <label for="id_extra_order_comment">Motivo</label>
-                        {{ form.extra_order_comment }}
+                    <hr>
+                    <form class="order-form" id="form_close_order" method="post" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="closed" id="id_closed" value="true">
+                        <div class="colspan-2">
+                            <label class="label" for="id_extra_order_comment">Cancelar orden</label>
+                            {{ form.extra_order_comment }}
+                        </div>
+                        {% if form.technician.value %}
+                        <input type="hidden" name="technician" id="id_technician" value="{{ form.technician.value }}">
+                        {% endif %}
+                        <input type="hidden" name="date_assigned" id="id_date_assigned" value="{{ form.date_assigned.value|date:'Y-m-d\T00:01' }}">
+                    </form>
+                    <div class="order-btns">
+                        <button type="submit" class="btn btn-danger" onclick="submit_form('form_close_order', '¿Desea cancelar la orden?')">Cancelar orden</button>
                     </div>
-                    {% if form.technician.value %}
-                    <input type="hidden" name="technician" id="id_technician" value="{{ form.technician.value }}">
-                    {% endif %}
-                    <input type="hidden" name="date_assigned" id="id_date_assigned" value="{{ form.date_assigned.value|date:'Y-m-d\T00:01' }}">
-                </form>
-                {% if not order.closed %}
-                <button type="submit" class="btn btn-danger" onclick="submit_form('form_close_order', '¿Desea cancelar la orden?')">Cancelar orden</button>
-                {% endif %}
-                
                 {% endif %}
             </div>
             <div class="installation">
                 <h2>Instalación</h2>
                 <form class="order-installation-form" method="post" action="{% url 'installation-update' order.installation.pk %}" id="id_form_installation_update">
                     {% csrf_token %}
-                    <div class="colspan-2">
-                        <label for="id_onu_serial">{{ installation_form.onu_serial.label }}</label>
+                    <div class="colspan-3">
+                        <label class="label" for="id_onu_serial">{{ installation_form.onu_serial.label }}</label>
                         {{ installation_form.onu_serial }}
                     </div>
-                    <div class="colspan-2">
-                        <label for="id_router_serial">{{ installation_form.router_serial.label }}</label>
+                    <div class="colspan-3">
+                        <label class="label" for="id_router_serial">{{ installation_form.router_serial.label }}</label>
                         {{ installation_form.router_serial }}
                     </div>
                     
-                    <div class="inputs-box colspan-2">
-                        
+                    <div class="inputs-box">
                         <div>
-                            <label for="id_zone">{{ installation_form.zone.label }}</label>
+                            <label class="label" for="id_zone">{{ installation_form.zone.label }}</label>
                             {{ installation_form.zone }}
                         </div>
                         <div>
-                            <label for="id_olt">{{ installation_form.olt.label }}</label>
+                            <label class="label" for="id_olt">{{ installation_form.olt.label }}</label>
                             {{ installation_form.olt }}
                         </div>
                         <div>
-                            <label for="id_card">Tarj.</label>
+                            <label class="label" for="id_card">Tarj.</label>
                             {{ installation_form.card }}
                         </div>
                         <div>
-                            <label for="id_pon">{{ installation_form.pon.label }}</label>
+                            <label class="label" for="id_pon">{{ installation_form.pon.label }}</label>
                             {{ installation_form.pon }}
                         </div>
                         <div>
-                            <label for="id_box">{{ installation_form.box.label }}</label>
+                            <label class="label" for="id_box">{{ installation_form.box.label }}</label>
                             {{ installation_form.box }}
                         </div>
                         <div>
-                            <label for="id_port">Prto.</label>
+                            <label class="label" for="id_port">Prto.</label>
                             {{ installation_form.port }}
                         </div>
                     </div>
-                    <div>
-                        <label for="id_box_power">P. Caja</label>
+                    <div class="colspan-2">
+                        <label class="label" for="id_box_power">P. Caja</label>
                         {{ installation_form.box_power }}
                     </div>
-                    <div>
-                        <label for="id_house_power">P. Roseta</label>
+                    <div class="colspan-2">
+                        <label class="label" for="id_house_power">P. Roseta</label>
                         {{ installation_form.house_power }}
                     </div>
                     
-                    <div>
-                        <label for="id_drop_serial">{{ installation_form.drop_serial.label }}</label>
+                    <div class="colspan-2">
+                        <label class="label" for="id_drop_serial">{{ installation_form.drop_serial.label }}</label>
                         {{ installation_form.drop_serial }}
                     </div>
-                    <div>
-                        <label for="id_drop_used">{{ installation_form.drop_used.label }}</label>
+                    <div class="colspan-2">
+                        <label class="label" for="id_drop_used">{{ installation_form.drop_used.label }}</label>
                         {{ installation_form.drop_used }}
                     </div>
-                    <div>
-                        <label for="id_hook_used">{{ installation_form.hook_used.label }}</label>
+                    <div class="colspan-2">
+                        <label class="label" for="id_hook_used">{{ installation_form.hook_used.label }}</label>
                         {{ installation_form.hook_used }}
                     </div>
-                    <div> 
-                        <label for="id_fast_conn_used">{{ installation_form.fast_conn_used.label }}</label>
+                    <div class="colspan-2"> 
+                        <label class="label" for="id_fast_conn_used">{{ installation_form.fast_conn_used.label }}</label>
                         {{ installation_form.fast_conn_used }}
                     </div>
                 </form> 
-                {% if not order.closed %}
-                    <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_installation_update', '¿Guardar cambios de instalación?')">Modificar instalación</button>
-                {% endif %}
                 <textarea id="id_installation_message" readonly></textarea>
+                <div class="installation-btns">
+                    {% if not order.closed %}
+                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_installation_update', '¿Guardar cambios de instalación?')">Modificar instalación</button>
+                    {% endif %}
+                    <button class="btn btn-info" onclick="copyToClipboard(id_installation_message)">Copiar Mensaje</button>
+                    {% if not order.activated %}
+                        <button onclick="submit_button(`{% url 'order-activated' order.pk %}`, '¿Marcar como activo el servicio?')" class="btn btn-success">Servicio activado</button>
+                    {% endif %}
+                </div>
+                
             </div>
         </div>
     </main>
@@ -166,7 +171,7 @@
 
     <script>
         window.onload = () => {
-            deactive_form('id_form_customer')
+            readonly_form('id_form_customer')
             get_message()
         }
     </script>

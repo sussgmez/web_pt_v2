@@ -33,6 +33,7 @@
                                 <option value="status_to_assign" {{ status_opt_4 }}>Instalación por asignar</option>
                                 <option value="status_closed" {{ status_opt_5 }}>Instalación cancelada</option>
                             {% endif %}
+                            <option value="status_activated" {{ status_opt_6 }}>Servicio activo</option>
                         </select>
                     </div>
                     <div class="filter filter-assigned-customer">
@@ -166,7 +167,7 @@
             min_date = document.querySelector('#id_min_date')
             max_date = document.querySelector('#id_max_date')
             technician_input = document.querySelector('#id_select_technician')
-            if (select_input.value == 'status_completed' || select_input.value == 'status_assigned' || select_input.value == 'status_closed' ) {
+            if (select_input.value == 'status_completed' || select_input.value == 'status_assigned' || select_input.value == 'status_closed' || select_input.value == 'status_activated') {
                 min_date.disabled = false
                 max_date.disabled = false
                 technician_input.disabled = false
