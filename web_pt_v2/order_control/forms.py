@@ -49,9 +49,13 @@ class OrderScheduleForm(forms.ModelForm):
 class InstallationPreconfigForm(forms.ModelForm):
     class Meta:
         model = Installation
-        fields = ['zone', 'onu_serial']
+        fields = ['zone', 'olt', 'card', 'pon', 'box', 'onu_serial']
         widgets = {
             'zone':forms.NumberInput(attrs={'placeholder':'Zona'}),
+            'olt':forms.NumberInput(attrs={'placeholder':'OLT'}),
+            'card':forms.NumberInput(attrs={'placeholder':'Tarj.'}),
+            'pon':forms.NumberInput(attrs={'placeholder':'PON'}),
+            'box':forms.NumberInput(attrs={'placeholder':'Caja'}),
             'onu_serial':forms.TextInput(attrs={'placeholder':'Serial ONU'})
         }
 

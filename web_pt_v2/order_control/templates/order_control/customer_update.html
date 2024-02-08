@@ -6,10 +6,10 @@
 
 {% block content %}
     {% with order=customer.orders|last_order  %}
-        {% if order.technician != user.technician and not user.is_superuser %}
+        {% if order.technician != user.technician and not user.is_staff %}
             <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
         {% endif %}
-        {% if order.closed and not user.is_superuser %}
+        {% if order.closed and not user.is_staff %}
             <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
         {% endif %}  
     {% endwith %}
@@ -94,7 +94,7 @@
                 <div class="order-list">
                     {% for order in customer.orders.all|order_by_date_created %}
                         <a class="order" href="{% url 'order-update' order.pk %}">
-                            <p class="order-id">OR-{{ order.pk }}: {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
+                            <p class="order-id">OR-{{ order.pk }}: {% if order.completed %}<span class="order-status-label order-completed">Orden finalizada</span>{% elif order.closed %}<span class="order-status-label order-closed">Orden cancelada</span>{% elif order.activated %}<span class="order-status-label order-completed">Servicio activo</span>{% elif order.technician %}<span class="order-status-label order-assigned">Orden asignada</span>{% else %}<span class="order-status-label order-to-assign">Orden por asignar</span>{% endif %}</p>
                             <div class="order-extra">
                                 {% if order.extra_order_comment %}
                                     <p>{{ order.extra_order_comment }}</p>

@@ -5,10 +5,10 @@
 {% block title %}Cliente{% endblock title %}
 
 {% block content %}
-    {% if order.technician != user.technician and not user.is_superuser %}
+    {% if order.technician != user.technician and not user.is_staff %}
         <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
     {% endif %}  
-    {% if order.closed and not user.is_superuser %}
+    {% if order.closed and not user.is_staff %}
         <meta http-equiv="REFRESH" content="0;url={% url 'customer-list' %}">
     {% endif %}  
 
@@ -18,6 +18,7 @@
                 <h1>OR-{{order.pk}}: <span class="contract-number">C{{ order.customer.contract_number }}</span></h1>
                 {% if order.completed %}<p class="order-label order-completed-label">Instalación finalizada</p>
                 {% elif order.closed %}<p class="order-label order-closed-label">Orden cancelada</p>
+                {% elif order.activated %}<p class="order-label order-completed-label">Servicio activo</p>
                 {% elif order.technician %}<p class="order-label order-assigned-label">Pendiente por realizar</p>
                 {% else %}<p class="order-label order-to-assign-label">Orden por asignar</p>{% endif %}</p>
                 <form class="order-customer-form" id="id_form_customer">
@@ -145,18 +146,22 @@
                     </div>
                 </form> 
                 <textarea id="id_installation_message" readonly></textarea>
+
                 <div class="installation-btns">
-                    {% if not order.closed %}
-                        <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_installation_update', '¿Guardar cambios de instalación?')">Modificar instalación</button>
-                    {% endif %}
-                    <button class="btn btn-info" onclick="copyToClipboard(id_installation_message)">Copiar Mensaje</button>
-                    {% if not order.activated %}
-                        <button onclick="submit_button(`{% url 'order-activated' order.pk %}`, '¿Marcar como activo el servicio?')" class="btn btn-success">Servicio activado</button>
+                    {% if order.technician == user.technician or user.is_superuser %}
+                        {% if not order.closed %}
+                            <button type="submit" class="btn btn-submit" onclick="submit_form('id_form_installation_update', '¿Guardar cambios de instalación?')">Modificar instalación</button>
+                        {% endif %}
+                        <button class="btn btn-info" onclick="copyToClipboard(id_installation_message)">Copiar Mensaje</button>
+                        {% if not order.activated %}
+                            <button onclick="submit_button(`{% url 'order-activated' order.pk %}`, '¿Marcar como activo el servicio?')" class="btn btn-success">Servicio activado</button>
+                        {% endif %}
                     {% endif %}
                 </div>
                 
             </div>
         </div>
+        
     </main>
     {% if messages %}
         <div id="id_alert_messages">
@@ -179,20 +184,36 @@
     {% if order.closed %}
         <script>
             window.onload = () => {
-                deactive_form('id_form_customer')
+                readonly_form('id_form_customer')
                 deactive_form('id_form_order_update')
                 deactive_form('id_form_installation_update')
                 get_message()
             }
         </script>
-    {% elif order.completed or not user.is_superuser %}
+    {% elif order.technician == user.technician  %}
         <script>
             window.onload = () => {
-                deactive_form('id_form_customer')
+                readonly_form('id_form_customer')
                 deactive_form('id_form_order_update')
                 get_message()
             }
         </script>
+    {% elif not user.is_superuser %}
+        <script>
+            window.onload = () => {
+                readonly_form('id_form_customer')
+                deactive_form('id_form_order_update')
+                deactive_form('id_form_installation_update')
+                get_message()
+            }
+        </script>
+     {% elif user.is_superuser %}
+        <script>
+            window.onload = () => {
+                readonly_form('id_form_customer')
+                get_message()   
+            }
+        </script>
     {% endif %}
-        
+
 {% endblock content %}

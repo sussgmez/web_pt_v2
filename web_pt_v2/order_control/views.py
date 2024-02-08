@@ -40,103 +40,74 @@ class CustomerListView(ListView):
             max_date_get = self.request.GET['max-date']
         except: pass
 
+        if min_date_get != ""  or max_date_get != "":
+            try: min_date = datetime.strptime(min_date_get + ' +0000', '%Y-%m-%d %z')
+            except: min_date = datetime.strptime('1999-01-01 +0000', '%Y-%m-%d %z')
+
+            try: max_date = datetime.strptime(max_date_get + ' +0000', '%Y-%m-%d %z')
+            except: max_date = datetime.strptime('2050-01-01 +0000', '%Y-%m-%d %z')
+
         technician = ""
         try: 
-            if self.request.user.is_superuser:
-                technician = self.request.GET['technician']
+            if self.request.user.is_superuser or self.request.user.is_staff:
+                technician = Technician.objects.get(code=self.request.GET['technician']) 
             else:
-                technician = self.request.user.technician.code
+                technician = self.request.user.technician
         except: pass
 
         customers = Customer.objects.filter(pk__contains=s_text) | Customer.objects.filter(address__contains=s_text) | Customer.objects.filter(customer_name__contains=s_text)
-
-
-        if technician != "":
-            for customer in customers:
-                try: 
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.technician.code != technician or (last_order.closed and not self.request.user.is_superuser): 
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                    
-
-                except: customers = customers.exclude(contract_number=customer.contract_number)
-
-        if min_date_get != "" or max_date_get != "":
-            for customer in customers:
-                try:last_order = customer.orders.all().order_by('-date_created')[0]
-                except: continue
-
-                if last_order.date_assigned == None:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-                    continue
-                
-                try: min_date = datetime.strptime(min_date_get + ' +0000', '%Y-%m-%d %z')
-                except: min_date = datetime.strptime('1999-01-01 +0000', '%Y-%m-%d %z')
-
-                try: max_date = datetime.strptime(max_date_get + ' +0000', '%Y-%m-%d %z')
-                except: max_date = datetime.strptime('2050-01-01 +0000', '%Y-%m-%d %z')
-
-                date_assigned = datetime(last_order.date_assigned.year, last_order.date_assigned.month, last_order.date_assigned.day, tzinfo=last_order.date_assigned.tzinfo)
-
-                if min_date > date_assigned or date_assigned > max_date:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-
-        if status == 'status_to_assign':
-            for customer in customers:
-                try: 
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.completed==True or last_order.technician!=None:
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                except: continue
-
-        elif status == 'status_assigned':
-            for customer in customers:
-                try:
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.completed==True or last_order.technician==None or last_order.closed==True:
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                except:
-                    customers = customers.exclude(contract_number=customer.contract_number)
         
-        elif status == 'status_completed':
+        if technician != "" or min_date_get != "" or max_date_get != "" or status != "":
+            exclude_list = []
             for customer in customers:
-                try: 
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.completed!=True:
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                except: 
-                    customers = customers.exclude(contract_number=customer.contract_number)
+                last_order = customer.orders.last()
+                if technician != "" and last_order.technician != technician:
+                    exclude_list.append(customer.contract_number)
+                    continue
 
-        elif status == 'status_closed':
-            for customer in customers:
-                try: 
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.closed!=True:
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                except: customers = customers.exclude(contract_number=customer.contract_number)
+                if min_date_get != "" or max_date_get != "":
+                    if last_order.date_assigned == None:
+                        exclude_list.append(customer.contract_number)
+                        continue
+                    date_assigned = datetime(last_order.date_assigned.year, last_order.date_assigned.month, last_order.date_assigned.day, tzinfo=last_order.date_assigned.tzinfo)
+                    if min_date > date_assigned or date_assigned > max_date:
+                        exclude_list.append(customer.contract_number)
+                        continue
 
-        elif status == 'status_activated':
-            for customer in customers:
-                try: 
-                    last_order = customer.orders.all().order_by('-date_created')[0]
-                    if last_order.activated!=True:
-                        customers = customers.exclude(contract_number=customer.contract_number)
-                except: 
-                    customers = customers.exclude(contract_number=customer.contract_number)
+                if status == 'status_to_assign':
+                    if last_order.completed==True or last_order.technician!=None or last_order.closed==True: 
+                        exclude_list.append(customer.contract_number)
+                        continue
+                elif status == 'status_assigned':
+                    if last_order.completed==True or last_order.technician==None or last_order.closed==True: 
+                        exclude_list.append(customer.contract_number)
+                        continue
+                elif status == 'status_completed':
+                    if last_order.completed!=True: 
+                        exclude_list.append(customer.contract_number)
+                        continue
+                elif status == 'status_closed':
+                    if last_order.closed!=True: 
+                        exclude_list.append(customer.contract_number)
+                        continue
+                elif status == 'status_activated':
+                    if last_order.activated!=True: 
+                        exclude_list.append(customer.contract_number)
+                        continue
 
+            customers = customers.exclude(contract_number__in=exclude_list)
 
         return customers.order_by(sort_by)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_superuser:
+        if self.request.user.is_superuser or self.request.user.is_staff:
             context['technicians'] = Technician.objects.all()
             try: 
                 context["selected_technician"] = self.request.GET['technician']
             except: pass
         else: 
             context['technicians'] = Technician.objects.filter(code=self.request.user.technician.code)
-
         try: 
             context["search_text"] = self.request.GET['search-text']
         except: pass
@@ -232,7 +203,7 @@ class Schedule(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        if self.request.user.is_superuser:
+        if self.request.user.is_staff:
             context["technicians"] = Technician.objects.all()
         else: 
             context["technicians"] = Technician.objects.filter(pk=self.request.user.technician.id)
@@ -249,7 +220,7 @@ class PreScheduleView(TemplateView):
         customers = Customer.objects.filter(order=None)
         for customer in customers:
             Order.objects.create(customer_id=customer.contract_number)
-        orders = Order.objects.filter(completed=False).filter(closed=False).order_by('technician')
+        orders = Order.objects.filter(completed=False).filter(closed=False).filter(activated=False).order_by('date_assigned')
 
         context["technicians"] = Technician.objects.all()
 
@@ -292,7 +263,7 @@ class Preconfig(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        installations = Installation.objects.filter(order__completed=False).filter(order__closed=False).exclude(order__date_assigned=None).order_by('order__date_assigned')
+        installations = Installation.objects.filter(order__completed=False).filter(order__closed=False).filter(order__activated=False).exclude(order__date_assigned=None).order_by('order__date_assigned')
         
         context['form_list'] = []
         for installation in installations:
@@ -303,12 +274,24 @@ class Preconfig(TemplateView):
     def post(self, *args, **kwargs):
         id_list = self.request.POST.getlist('id')
         zone_list = self.request.POST.getlist('zone')
+        olt_list = self.request.POST.getlist('olt')
+        card_list = self.request.POST.getlist('card')
+        pon_list = self.request.POST.getlist('pon')
+        box_list = self.request.POST.getlist('box')
         onu_serial_list = self.request.POST.getlist('onu_serial')
 
         for i in range(0, len(id_list)):
             installation = Installation.objects.get(id=id_list[i])
             if zone_list[i] != "":
                 installation.zone = zone_list[i]
+            if olt_list[i] != "":
+                installation.olt = olt_list[i]
+            if card_list[i] != "":
+                installation.card = card_list[i]
+            if pon_list[i] != "":
+                installation.pon = pon_list[i]
+            if box_list[i] != "":
+                installation.box = box_list[i]
             installation.onu_serial = onu_serial_list[i]
             installation.save()
         
@@ -349,9 +332,16 @@ def export_customers(request):
         max_date_get = request.GET['max-date']
     except: pass
 
+    if min_date_get != ""  or max_date_get != "":
+        try: min_date = datetime.strptime(min_date_get + ' +0000', '%Y-%m-%d %z')
+        except: min_date = datetime.strptime('1999-01-01 +0000', '%Y-%m-%d %z')
+
+        try: max_date = datetime.strptime(max_date_get + ' +0000', '%Y-%m-%d %z')
+        except: max_date = datetime.strptime('2050-01-01 +0000', '%Y-%m-%d %z')
+
     technician = ""
     try: 
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.is_staff:
             technician = request.GET['technician']
         else:
             technician = request.user.technician.code
@@ -359,76 +349,45 @@ def export_customers(request):
 
     customers = Customer.objects.filter(pk__contains=s_text) | Customer.objects.filter(address__contains=s_text) | Customer.objects.filter(customer_name__contains=s_text)
 
-    if technician != "":
+    if technician != "" or min_date_get != "" or max_date_get != "" or status != "":
+        exclude_list = []
         for customer in customers:
-            try: 
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.technician.code != technician or (last_order.closed and not request.user.is_superuser): 
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except: customers = customers.exclude(contract_number=customer.contract_number)
-
-    if min_date_get != "" or max_date_get != "":
-        for customer in customers:
-            try:last_order = customer.orders.all().order_by('-date_created')[0]
-            except: continue
-
-            if last_order.date_assigned == None:
-                customers = customers.exclude(contract_number=customer.contract_number)
+            last_order = customer.orders.last()
+            if technician != "" and last_order.technician != technician:
+                exclude_list.append(customer.contract_number)
                 continue
-            
-            try: min_date = datetime.strptime(min_date_get + ' +0000', '%Y-%m-%d %z')
-            except: min_date = datetime.strptime('1999-01-01 +0000', '%Y-%m-%d %z')
 
-            try: max_date = datetime.strptime(max_date_get + ' +0000', '%Y-%m-%d %z')
-            except: max_date = datetime.strptime('2050-01-01 +0000', '%Y-%m-%d %z')
+            if min_date_get != "" or max_date_get != "":
+                if last_order.date_assigned == None:
+                    exclude_list.append(customer.contract_number)
+                    continue
+                date_assigned = datetime(last_order.date_assigned.year, last_order.date_assigned.month, last_order.date_assigned.day, tzinfo=last_order.date_assigned.tzinfo)
+                if min_date > date_assigned or date_assigned > max_date:
+                    exclude_list.append(customer.contract_number)
+                    continue
 
-            date_assigned = datetime(last_order.date_assigned.year, last_order.date_assigned.month, last_order.date_assigned.day, tzinfo=last_order.date_assigned.tzinfo)
+            if status == 'status_to_assign':
+                if last_order.completed==True or last_order.technician!=None or last_order.closed==True: 
+                    exclude_list.append(customer.contract_number)
+                    continue
+            elif status == 'status_assigned':
+                if last_order.completed==True or last_order.technician==None or last_order.closed==True: 
+                    exclude_list.append(customer.contract_number)
+                    continue
+            elif status == 'status_completed':
+                if last_order.completed!=True: 
+                    exclude_list.append(customer.contract_number)
+                    continue
+            elif status == 'status_closed':
+                if last_order.closed!=True: 
+                    exclude_list.append(customer.contract_number)
+                    continue
+            elif status == 'status_activated':
+                if last_order.activated!=True: 
+                    exclude_list.append(customer.contract_number)
+                    continue
 
-            if min_date > date_assigned or date_assigned > max_date:
-                customers = customers.exclude(contract_number=customer.contract_number)
-
-    if status == 'status_to_assign':
-        for customer in customers:
-            try: 
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.completed==True or last_order.technician!=None:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except: continue
-
-    elif status == 'status_assigned':
-        for customer in customers:
-            try:
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.completed==True or last_order.technician==None or last_order.closed==True:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except:
-                customers = customers.exclude(contract_number=customer.contract_number)
-    
-    elif status == 'status_completed':
-        for customer in customers:
-            try: 
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.completed!=True:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except: 
-                customers = customers.exclude(contract_number=customer.contract_number)
-
-    elif status == 'status_closed':
-        for customer in customers:
-            try: 
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.closed!=True:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except: customers = customers.exclude(contract_number=customer.contract_number)
-
-    elif status == 'status_activated':
-        for customer in customers:
-            try: 
-                last_order = customer.orders.all().order_by('-date_created')[0]
-                if last_order.activated!=True:
-                    customers = customers.exclude(contract_number=customer.contract_number)
-            except: 
-                customers = customers.exclude(contract_number=customer.contract_number)
+        customers = customers.exclude(contract_number__in=exclude_list)
 
     df = pandas.DataFrame()
 
@@ -621,13 +580,3 @@ def load_excel(request):
             messages.success(request, message)
             
     return redirect('customer-list')
-
-
-
-        # for customer in customers:
-        #     try:
-        #         last_order = customer.orders.all().order_by('-date_created')[0]
-        #         if last_order.completed:
-        #             last_order.activated = True
-        #             last_order.save()
-        #     except: pass

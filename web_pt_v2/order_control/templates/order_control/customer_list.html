@@ -29,7 +29,7 @@
                             <option value="none" {{ status_opt_1 }}>--- ---</option>
                             <option value="status_completed" {{ status_opt_2 }}>Instalación finalizada</option>
                             <option value="status_assigned" {{ status_opt_3 }}>Instalación asignada</option>
-                            {% if user.is_superuser %}
+                            {% if user.is_superuser or user.is_staff %}
                                 <option value="status_to_assign" {{ status_opt_4 }}>Instalación por asignar</option>
                                 <option value="status_closed" {{ status_opt_5 }}>Instalación cancelada</option>
                             {% endif %}
@@ -66,7 +66,7 @@
                             </select>
                         </div>
                         <input class="btn btn-info" type="submit" value="Aplicar filtros">
-                        {% if user.is_superuser %}
+                        {% if user.is_superuser or user.is_staff %}
                             <a class="btn btn-success" href="customer/export?search-text={{ search_text }}&status={{ status }}&sort-by={{ sort_by }}&technician={{ selected_technician }}&min-date={{ min_date }}&max-date={{ max_date }}">Exportar</a>
                         {% endif %}
                     </div>
@@ -123,6 +123,7 @@
                             <div class="colspan-2">
                                 {% if order.closed %}<p class="p-status p-closed">Instalación cancelada</p>
                                 {% elif order.completed %}<p class="p-status p-completed">Instalación finalizada</p>
+                                {% elif order.activated %}<p class="p-status p-activated">Servicio Activo</p>
                                 {% elif order.technician %}<p class="p-status p-assigned">Instalación asignada</p>
                                 {% else %}<p class="p-status p-to-assign">Instalación por asignar</p>
                                 {% endif %}

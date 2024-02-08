@@ -10,7 +10,10 @@
             <div class="header-page">
                 <h1>Agenda</h1>
                 {% if user.is_superuser %}
+                <div class="btns">
                     <a class="btn btn-success" href="{% url 'pre-schedule' %}">Instalaciones Pendientes</a>
+                    <a class="btn btn-info" href="{% url 'preconfig' %}">Preactivaciones</a>
+                </div>
                 {% endif %}
             </div>
             {% for technician in technicians %}
@@ -60,11 +63,19 @@
                                 </div>
                             </div>
                         {% endfor %}
-                        {% if not technician.orders.all|not_completed %}
-                            <div>
-                                <p class="date without-orders">Sin asignaciones</p>
-                            </div>
-                        {% endif %}
+                        {% if user.is_superuser %}
+                            {% if not technician.orders.all|not_completed %}
+                                <div>
+                                    <p class="date without-orders">Sin asignaciones</p>
+                                </div>
+                            {% endif %}
+                        {% else %} 
+                            {% if not technician.orders.all|not_completed|get_dates %}
+                                <div>
+                                    <p class="date without-orders">Sin asignaciones</p>
+                                </div>
+                            {% endif %}
+                        {% endif %}   
                     </div>
                 </div>
             {% endfor %}
