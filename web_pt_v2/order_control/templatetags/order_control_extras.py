@@ -18,7 +18,7 @@ def not_completed(value):
 
 @register.filter
 def previous(value, i):
-    try: 
+    try:
         return value[i - 1]
     except:
         return None

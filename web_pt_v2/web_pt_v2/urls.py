@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.urls import include
-from order_control.views import CustomerListView, load_excel, CustomerCreateView, CustomerUpdateView, OrderUpdateView, InstallationUpdateView, order_create, order_delete, customer_delete, order_complete, order_activated, export_customers, Schedule, PreScheduleView, TechnicianListView, Preconfig
+from order_control.views import CustomerListView, load_excel, CustomerCreateView, CustomerUpdateView, OrderUpdateView, InstallationUpdateView, order_create, order_delete, customer_delete, order_complete, order_activated, export_customers, Schedule, PreScheduleView, Preconfig
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,6 +22,5 @@ urlpatterns = [
     path('customer_exist/<int:pk>', login_required(load_excel), name='load-excel'),
     path('schedule/', login_required(Schedule.as_view()), name='schedule'),
     path('schedule/assign', login_required(PreScheduleView.as_view()), name='pre-schedule'),
-    path('technicians/', login_required(TechnicianListView.as_view()), name='technicians'),
     path('preconfig/', login_required(Preconfig.as_view()), name='preconfig'),   
 ]

@@ -8,15 +8,15 @@
     <title>PT | {% block title %}{% endblock title %}</title>
 
     <!-- Normalize -->
-    <link rel="stylesheet" href="{% static "normalize.css" %}">
-    
+    <link rel="stylesheet" href="{% static "normalize.css" %}?">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <!-- My Styles -->
-    <link rel="stylesheet" href="{% static "style.css" %}"> 
+    <link rel="stylesheet" href="{% static "style.css" %}?v=1.5">
 </head>
 <body>
     <!-- Header -->
@@ -30,13 +30,12 @@
             <nav id="id_header_navbar">
                 <a class="navbar-option" href="{% url 'customer-list' %}">Clientes</a>
                 <a class="navbar-option" href="{% url 'schedule' %}">Agenda</a>
-                <!-- <a class="navbar-option" href="{% url 'technicians' %}">Técnicos</a> -->
                 <hr>
                 <a class="navbar-option" href="{% url 'logout' %}">Cerrar Sesión</a>
             </nav>
             {% endif %}
         </header>
-        
+
         <!-- Content -->
     {% block content %}
     {% endblock content %}

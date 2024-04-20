@@ -1,0 +1,71 @@
+{% extends "core.html" %}
+
+{% load static %}
+{% block title %}Clientes{% endblock title %}
+
+{% block content %}
+    <main>
+        <div class="page-customers">
+            <h1>Clientes</h1>
+            <button>Importar .xlsx</button>
+            <button onclick="show_or_hide_form(id_div_add_customer)">Añadir +</button>
+            <input type="text" placeholder="Buscar...">
+            <button>Buscar</button>
+            <button>Exportar</button>
+            <div class="customers">
+                {% for customer in customers %}
+                    <div class="customer" onclick="get_udpate_form('{{customer.contract_number}}')">
+                        {{ customer.contract_number }}
+                        {{ customer.customer_name }}
+                        
+                    </div>
+                {% endfor %}    
+            </div>
+            <button>Anterior</button>
+            <button>Siguiente</button>
+        </div>
+    </main>
+
+    <div id="id_div_add_customer">
+        <button onclick="show_or_hide_form(id_div_add_customer)">Cerrar</button>
+        <form id="id_form_add_customer" action="{% url 'customer-add' %}" method="post">
+            {% csrf_token %}
+            {{ form_add_customer.as_div }}
+            <button id="id_btn_submit_form_add" disabled>Añadir</button>
+        </form>
+    </div>
+
+    <div id="id_div_update_customer"></div>
+
+    <script>
+        function show_or_hide_form(id_div) {
+            if (id_div.style.display == "block") id_div.style.display = "none"
+            else id_div.style.display = "block"
+        }
+        async function get_contract(input) {
+            await fetch(`${input.value}`)
+            .then(response => {
+                if (response.ok) document.querySelector('#id_btn_submit_form_add').disabled = true
+                else document.querySelector('#id_btn_submit_form_add').disabled = false
+            })
+        }
+        async function get_udpate_form(contract_number) {
+            await fetch(`customer/${contract_number}`)
+            .then(response => {
+                return response.text()
+            })
+            .then(data => {
+                document.querySelector('#id_div_update_customer').innerHTML = data
+            })
+        }
+        document.addEventListener('submit', (e) => {
+            const form = e.target
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form)
+            })
+            e.preventDefault()
+        })
+    </script>
+
+{% endblock content %}  

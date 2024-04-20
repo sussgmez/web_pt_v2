@@ -17,7 +17,7 @@
                     <button class="btn" onclick="document.getElementById('input-excel-file').click()">Importar .xlsx</button>
                     <a class="btn" href="{% url 'customer-create' %}">Añadir +</a>
                 </div>
-            {% endif %} 
+            {% endif %}
             <div class="filters">
                 <form method="get" class="filters-form">
                     <div class="filter filter-text">
@@ -179,7 +179,7 @@
                 min_date.disabled = true
                 max_date.disabled = true
                 technician_input.disabled = true
-                
+
                 document.querySelectorAll('.filter-assigned-customer').forEach((element) => {
                     element.classList.add('filter-disabled')
                 })

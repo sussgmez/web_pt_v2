@@ -61,10 +61,12 @@ class CustomerListView(ListView):
             exclude_list = []
             for customer in customers:
                 last_order = customer.orders.last()
+                if last_order == None:
+                    exclude_list.append(customer.contract_number)
+                    continue
                 if technician != "" and last_order.technician != technician:
                     exclude_list.append(customer.contract_number)
                     continue
-
                 if min_date_get != "" or max_date_get != "":
                     if last_order.date_assigned == None:
                         exclude_list.append(customer.contract_number)
@@ -190,12 +192,6 @@ class InstallationUpdateView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, "Cambios guardados con éxito")
         return reverse('order-update', kwargs={'pk':self.object.order.pk})
-
-
-class TechnicianListView(ListView):
-    model = Technician
-    template_name = "order_control/technician_list.html"
-
 
 class Schedule(TemplateView):
     template_name = "order_control/schedule.html"
@@ -353,6 +349,9 @@ def export_customers(request):
         exclude_list = []
         for customer in customers:
             last_order = customer.orders.last()
+            if last_order == None:
+                exclude_list.append(customer.contract_number)
+                continue
             if technician != "" and last_order.technician != technician:
                 exclude_list.append(customer.contract_number)
                 continue
